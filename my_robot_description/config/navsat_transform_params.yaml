@@ -1,0 +1,16 @@
+navsat_transform_node:
+  ros__parameters:
+    use_sim_time: true
+    gps_topic: "/gps/fix"
+    imu_topic: "/imu"
+    odom_topic: "/odometry/filtered"
+    world_frame: "map"
+    base_link_frame: "base_footprint"
+    orientation_frame: "base_footprint"
+    broadcast_utm_transform: true
+    publish_filtered_gps: true
+    publish_filtered_topic: "/gps/filtered"
+    frequency: 10.0
+    magnetic_declination_radians: 0.0
+    yaw_offset: 0.0
+    smooth_factor: 0.9

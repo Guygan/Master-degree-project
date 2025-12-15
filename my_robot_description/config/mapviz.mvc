@@ -1,0 +1,21 @@
+fixed_frame: map
+
+displays:
+  - type: mapviz_plugins/tile_map
+    config:
+      custom_sources:
+      - base_url: http://tile.openstreetmap.org/{z}/{x}/{y}.png
+        max_zoom: 19
+        type: wmts
+        name: OSM
+      source: OSM
+
+  - type: mapviz_plugins/navsat
+    config:
+      topic: /gps/fix
+      draw_style: points
+      color: "#ff0000"
+
+  - type: mapviz_plugins/tf_frame
+    config:
+      frame: base_link

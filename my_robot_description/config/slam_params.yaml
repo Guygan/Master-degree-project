@@ -1,0 +1,14 @@
+slam_toolbox:
+  ros__parameters:
+    odom_frame: odom
+    map_frame: map
+    base_frame: base_footprint
+    scan_topic: /scan_corrected
+    use_sim_time: true
+    resolution: 0.05
+    map_update_interval: 1.0
+    mode: mapping
+    solver_plugin: "solver_plugins::CeresSolver"
+    transform_publish_period: 0.05
+    throttle_scans: 1
+    debug_logging: false

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>my_robot_description</name>
+  <version>0.0.1</version>
+  <description>Robot with RViz2, Gazebo, and topic-based coordination nodes</description>
+  <maintainer email="guygan2002@gmail.com">guygan</maintainer>
+  <license>MIT</license>
+
+  <!-- Build tools -->
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <!-- Dependencies -->
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav2_msgs</depend>
+  <depend>action_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>xacro</depend>
+  <depend>urdf</depend>
+  <depend>robot_localization</depend>
+  <depend>navigation2</depend>
+  <depend>slam_toolbox</depend>
+  <depend>ros_gz_sim</depend>
+  <depend>ros_gz_bridge</depend>
+  <depend>teleop_twist_keyboard</depend>
+  <depend>zenity</depend>
+  <depend>motor_driver</depend>
+
+  <!-- Testing -->
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
