@@ -1,0 +1,58 @@
+capture_directory: "~"
+fixed_frame: map
+target_frame: base_link
+fix_orientation: false
+rotate_90: false
+enable_antialiasing: true
+show_displays: true
+view_scale: 0.5
+offset_x: 0.0
+offset_y: 0.0
+use_latest_transforms: true
+background: "#a0a0a4"
+displays:
+  - type: mapviz_plugins/tile_map
+    name: Google Satellite
+    config:
+      visible: true
+      collapsed: false
+      custom_sources:
+        - base_url: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+          max_zoom: 22
+          name: Google_Sat
+          type: wmts
+      source: Google_Sat
+  - type: mapviz_plugins/tf
+    name: Robot Frame
+    config:
+      visible: true
+      collapsed: false
+      frame: base_link
+      color: "#00ff00"
+      draw_style: arrows
+      position_tolerance: 0
+      buffer_size: 1
+      static_arrow_sizes: true
+      arrow_size: 10
+  - type: mapviz_plugins/tf
+    name: Map Frame
+    config:
+      visible: true
+      collapsed: true
+      frame: map
+      color: "#ff0000"
+      draw_style: arrows
+      position_tolerance: 0
+      buffer_size: 1
+      static_arrow_sizes: true
+      arrow_size: 5
+  - type: mapviz_plugins/navsat
+    name: Raw GPS
+    config:
+      visible: true
+      collapsed: true
+      topic: /gps/fix
+      color: "#ffff00"
+      draw_style: points
+      position_tolerance: 0
+      buffer_size: 10

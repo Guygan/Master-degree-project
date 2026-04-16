@@ -17,7 +17,7 @@ def generate_launch_description():
     urdf_path = os.path.join(pkg_dir, 'urdf', 'my_robot.urdf.xacro')
     ekf_config_path = os.path.join(pkg_dir, 'config', 'ekf.yaml')
     bridge_config_path = os.path.join(pkg_dir, 'config', 'gz_bridge.yaml')
-    default_world_path = os.path.join(pkg_dir, 'worlds', 'my_world.sdf')
+    default_world_path = os.path.join(pkg_dir, 'worlds', 'test1.sdf')
 
     # Launch arguments
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')

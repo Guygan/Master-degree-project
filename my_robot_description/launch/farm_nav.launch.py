@@ -25,17 +25,23 @@ def generate_launch_description():
     
     # Define file paths
     urdf_file = os.path.join(pkg_path, 'urdf', 'my_robot.urdf.xacro')
-    map_file = os.path.join(pkg_path, 'maps', 'my_farm_map.yaml') 
+    map_file = os.path.join(pkg_path, 'maps', 'farm2.yaml') 
     nav2_params_file = os.path.join(pkg_path, 'config', 'nav2_params_gps.yaml')
     bridge_params_file = os.path.join(pkg_path, 'config', 'gz_bridge.yaml')
     rviz_config_file = os.path.join(pkg_path, 'rviz', 'my_nav2_view.rviz')
-    world_file = os.path.join(pkg_path, 'worlds', 'farm.sdf')
+    world_file = os.path.join(pkg_path, 'worlds', 'test.sdf')
+    
+    # --- Config สำหรับระบบ GPS ---
     ekf_config_file = os.path.join(pkg_path, 'config', 'ekf_gps.yaml')
+    navsat_config_file = os.path.join(pkg_path, 'config', 'navsat_transform_params.yaml') # [✨ ใหม่]
+    
+    # Config ของ Mapviz
+    mapviz_config_file = os.path.join(pkg_path, 'config', 'my_mapviz_config.mvc')
 
     # Launch Arguments
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     
-    # Environment Variables
+    # Environment Variables (สำหรับ Gazebo)
     set_env_vars = AppendEnvironmentVariable(
         'GZ_SIM_RESOURCE_PATH', 
         os.path.join(pkg_path, '..')
@@ -61,6 +67,7 @@ def generate_launch_description():
         }]
     )
 
+    # Gazebo Sim
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(ros_gz_sim_pkg, 'launch', 'gz_sim.launch.py')
@@ -101,35 +108,57 @@ def generate_launch_description():
     )
 
     # =========================================================================
-    # 3. LOCALIZATION NODES (EKF & Static TF)
+    # 3. LOCALIZATION NODES (Dual EKF + NavSat) - [✨ MAJOR UPDATE]
     # =========================================================================
     
-    ekf_node = Node(
+    # 3.1 Local EKF (คำนวณ Odom -> Base_link)
+    # ใช้ข้อมูลจากล้อและ IMU เพื่อความต่อเนื่อง (Continuous)
+    ekf_local_node = Node(
        package='robot_localization', 
        executable='ekf_node', 
-       name='ekf_filter_node',
+       name='ekf_filter_node_local',
        output='screen', 
        parameters=[
            ekf_config_file, 
            {'use_sim_time': use_sim_time}
-       ]
+       ],
+       remappings=[('odometry/filtered', 'odometry/local')]
     )
 
-    # Static TF (Map -> Odom) *ใช้ชั่วคราวแทน GPS เต็มระบบ*
-    map_to_odom_tf = Node(
-        package='tf2_ros', 
-        executable='static_transform_publisher',
+    # 3.2 Navsat Transform (แปลง GPS Lat/Lon -> X,Y Coordinates)
+    # รับค่า GPS ดิบ แล้วแปลงเป็นพิกัดเมตรให้ EKF Global
+    navsat_transform_node = Node(
+        package='robot_localization',
+        executable='navsat_transform_node',
+        name='navsat_transform_node',
         output='screen',
-        arguments=[
-            '0.0', '0.0', '0', 
-            '0', '0', '0', 
-            'map', 'odom'
+        parameters=[
+            navsat_config_file,
+            {'use_sim_time': use_sim_time}
+        ],
+        remappings=[
+            ('gps/fix', '/gps/fix'),
+            ('imu/data', '/imu'),
+            ('odometry/filtered', 'odometry/global'), # รับค่าจาก Global EKF มาอ้างอิง
+            ('gps/filtered', 'gps/filtered'),
+            ('odometry/gps', 'odometry/gps')          # ส่งค่าที่แปลงแล้วออกไป
         ]
     )
 
-    # =========================================================================
-    # 4. NAVIGATION STACK (NAV2 NODES)
-    # =========================================================================
+    # 3.3 Global EKF (คำนวณ Map -> Odom)
+    # รับค่าจาก NavSat (odometry/gps) มาหลอมรวม เพื่อระบุตำแหน่งบนโลกจริง
+    ekf_global_node = Node(
+       package='robot_localization', 
+       executable='ekf_node', 
+       name='ekf_filter_node_global',
+       output='screen', 
+       parameters=[
+           ekf_config_file, 
+           {'use_sim_time': use_sim_time}
+       ],
+       remappings=[('odometry/filtered', 'odometry/global')]
+    )
+
     
     # 4.1 Map Server
     map_server = Node(
@@ -156,8 +185,7 @@ def generate_launch_description():
         }]
     )
 
-    # 4.2 Navigation Nodes (Controller, Planner, Behaviors, etc.)
-    # รวมไว้ใน List เพื่อความสะอาด
+    # 4.2 Navigation Nodes
     nav2_common_params = [
         nav2_params_file, 
         {'use_sim_time': use_sim_time}
@@ -173,7 +201,7 @@ def generate_launch_description():
         Node(package='nav2_collision_monitor', executable='collision_monitor', name='collision_monitor', output='screen', parameters=nav2_common_params)
     ]
 
-    # 4.3 Navigation Lifecycle Manager
+    # 4.3 Navigation Lifecycle
     nav_lifecycle = Node(
         package='nav2_lifecycle_manager', 
         executable='lifecycle_manager', 
@@ -195,70 +223,30 @@ def generate_launch_description():
     )
 
     # =========================================================================
-    # 5. HELPER NODES (Custom Logic) - Vertical Style
+    # 5. HELPER NODES (Custom Logic)
     # =========================================================================
     
     helper_common_params = [{'use_sim_time': use_sim_time}]
     
     helper_nodes = [
-        # 5.1 Stuck Manager
-        Node(
-            package='my_robot_description', 
-            executable='stuck_manager_node', 
-            name='stuck_manager_node',
-            parameters=helper_common_params,
-            output='screen'
-        ),
-        # 5.2 UI Node
-        Node(
-            package='my_robot_description', 
-            executable='stuck_ui_node', 
-            name='stuck_ui_node',
-            parameters=helper_common_params,
-            output='screen'
-        ),
-        # 5.3 Goal Monitor
-        Node(
-            package='my_robot_description', 
-            executable='goal_monitor_node', 
-            name='goal_monitor_node',
-            parameters=helper_common_params,
-            output='screen'
-        ),
-        # 5.4 Laser to Sonar
-        Node(
-            package='my_robot_description', 
-            executable='laser_to_sonar_node', 
-            name='laser_to_sonar_node',
-            parameters=helper_common_params,
-            output='screen'
-        ),
-        # 5.5 Pause Mode
-        Node(
-            package='my_robot_description', 
-            executable='pause_mode_node', 
-            name='pause_mode_node',
-            output='screen'
-        ),
-        # 5.6 Return to Home
-        Node(
-            package='my_robot_description', 
-            executable='return_to_home_node', 
-            name='return_to_home_node',
-            output='screen'
-        ),
-        # 5.7 Go to Checkpoint
-        Node(
-            package='my_robot_description', 
-            executable='go_to_checkpoint_node', 
-            name='go_to_checkpoint_node',
-            output='screen'
-        )
+        Node(package='my_robot_description', executable='stuck_manager_node', name='stuck_manager_node', parameters=helper_common_params, output='screen'),
+        Node(package='my_robot_description', executable='stuck_ui_node', name='stuck_ui_node', parameters=helper_common_params, output='screen'),
+        Node(package='my_robot_description', executable='goal_monitor_node', name='goal_monitor_node', parameters=helper_common_params, output='screen'),
+        Node(package='my_robot_description', executable='laser_to_sonar_node', name='laser_to_sonar_node', parameters=helper_common_params, output='screen'),
+        Node(package='my_robot_description', executable='pause_mode_node', name='pause_mode_node', output='screen'),
+        Node(package='my_robot_description', executable='return_to_home_node', name='return_to_home_node', output='screen'),
+        Node(package='my_robot_description', executable='go_to_checkpoint_node', name='go_to_checkpoint_node', output='screen')
     ]
 
     # =========================================================================
-    # 6. VISUALIZATION (RViz)
+    # 6. VISUALIZATION (RViz & Mapviz)
     # =========================================================================
+    
+    gui_env = os.environ.copy()
+    gui_env['LIBGL_ALWAYS_SOFTWARE'] = '1'
+    gui_env['QT_QPA_PLATFORM'] = 'xcb'
+
+    # 6.1 RViz
     rviz = Node(
         package='rviz2', 
         executable='rviz2', 
@@ -266,27 +254,33 @@ def generate_launch_description():
         arguments=['-d', rviz_config_file],
         parameters=[{'use_sim_time': use_sim_time}],
         output='screen',
-       
+        env=gui_env
     )
 
+  
     # =========================================================================
     # 7. EXECUTION SEQUENCE
     # =========================================================================
     
-    # รอให้ EKF พร้อมก่อน ค่อยรัน Nav2 และ Helper Nodes
     start_main_systems = RegisterEventHandler(
         OnProcessStart(
-            target_action=ekf_node,
+            target_action=ekf_local_node, # รอให้ EKF ตัวแรกเริ่มก่อน
             on_start=[
-                LogInfo(msg='>> EKF Started. Launching Map, Nav2 & Helpers...'),
+                LogInfo(msg='>> Local EKF Started. Launching Global GPS, Nav2 & Helpers...'),
+                
+                # Start Global Localization
+                ekf_global_node,
+                navsat_transform_node,
+                
+                # Start Nav2 Stack
                 map_server, 
                 map_lifecycle,
-                
-                # Unpack lists of nodes
                 *nav2_nodes,  
                 nav_lifecycle,
                 
+                # Visualization
                 rviz,
+        
                 
                 *helper_nodes
             ]
@@ -297,7 +291,7 @@ def generate_launch_description():
         DeclareLaunchArgument('use_sim_time', default_value='true'),
         set_env_vars,
         
-        # 1. Start Simulation Environment
+        # 1. Start Simulation
         robot_state_publisher, 
         gazebo, 
         spawn_robot,
@@ -306,9 +300,8 @@ def generate_launch_description():
         bridge, 
         frame_fixer, 
         
-        # 3. Start TF & Localization
-        map_to_odom_tf, 
-        ekf_node,
+        # 3. Start Local Localization (ตัวเริ่ม)
+        ekf_local_node,
         
         # 4. Trigger the rest
         start_main_systems

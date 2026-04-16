@@ -1,11 +1,10 @@
-#!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
 from action_msgs.msg import GoalStatusArray
-import uuid  # สำหรับแปลง ID
+import uuid  
 import threading
 import subprocess
-import time # 👈 [แก้ไข] เพิ่ม import time
+import time 
 
 NAV_ACTION_TOPIC = '/navigate_to_pose'
 

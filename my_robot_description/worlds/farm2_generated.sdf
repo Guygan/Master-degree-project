@@ -1,0 +1,3770 @@
+<?xml version='1.0'?>
+<sdf version='1.8'>
+  <world name='farm_generated_world'>
+    
+    <physics name='1ms' type='ignored'>
+      <max_step_size>0.004</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>250</real_time_update_rate>
+    </physics>
+
+    <plugin name='gz::sim::systems::Physics' filename='gz-sim-physics-system'/>
+    <plugin name='gz::sim::systems::UserCommands' filename='gz-sim-user-commands-system'/>
+    <plugin name='gz::sim::systems::Contact' filename='gz-sim-contact-system'/>
+    
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>false</shadows>
+    </scene>
+
+    <light type="directional" name="sun">
+      <cast_shadows>false</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name='ground_plane'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><plane><normal>0 0 1</normal><size>200 200</size></plane></geometry>
+        </collision>
+        <visual name='visual'>
+          <geometry><plane><normal>0 0 1</normal><size>200 200</size></plane></geometry>
+          <material><ambient>0.8 0.8 0.8 1</ambient><diffuse>0.8 0.8 0.8 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name='maze_walls'>
+      <static>true</static>
+      <link name='link'>
+    
+        <visual name='v_0'>
+          <pose>-22.000 -0.570 1.0 0 0 0</pose>
+          <geometry><box><size>36.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_0'>
+          <pose>-22.000 -0.570 1.0 0 0 0</pose>
+          <geometry><box><size>36.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_1'>
+          <pose>10.000 -0.570 1.0 0 0 0</pose>
+          <geometry><box><size>12.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_1'>
+          <pose>10.000 -0.570 1.0 0 0 0</pose>
+          <geometry><box><size>12.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_2'>
+          <pose>-22.000 -0.170 1.0 0 0 0</pose>
+          <geometry><box><size>36.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_2'>
+          <pose>-22.000 -0.170 1.0 0 0 0</pose>
+          <geometry><box><size>36.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_3'>
+          <pose>10.000 -0.170 1.0 0 0 0</pose>
+          <geometry><box><size>12.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_3'>
+          <pose>10.000 -0.170 1.0 0 0 0</pose>
+          <geometry><box><size>12.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_4'>
+          <pose>-21.800 0.230 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_4'>
+          <pose>-21.800 0.230 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_5'>
+          <pose>10.000 0.230 1.0 0 0 0</pose>
+          <geometry><box><size>12.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_5'>
+          <pose>10.000 0.230 1.0 0 0 0</pose>
+          <geometry><box><size>12.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_6'>
+          <pose>-21.800 0.630 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_6'>
+          <pose>-21.800 0.630 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_7'>
+          <pose>10.000 0.630 1.0 0 0 0</pose>
+          <geometry><box><size>12.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_7'>
+          <pose>10.000 0.630 1.0 0 0 0</pose>
+          <geometry><box><size>12.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_8'>
+          <pose>-21.800 1.030 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_8'>
+          <pose>-21.800 1.030 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_9'>
+          <pose>10.000 1.030 1.0 0 0 0</pose>
+          <geometry><box><size>12.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_9'>
+          <pose>10.000 1.030 1.0 0 0 0</pose>
+          <geometry><box><size>12.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_10'>
+          <pose>-21.800 1.430 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_10'>
+          <pose>-21.800 1.430 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_11'>
+          <pose>10.000 1.430 1.0 0 0 0</pose>
+          <geometry><box><size>12.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_11'>
+          <pose>10.000 1.430 1.0 0 0 0</pose>
+          <geometry><box><size>12.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_12'>
+          <pose>-21.800 1.830 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_12'>
+          <pose>-21.800 1.830 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_13'>
+          <pose>9.800 1.830 1.0 0 0 0</pose>
+          <geometry><box><size>13.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_13'>
+          <pose>9.800 1.830 1.0 0 0 0</pose>
+          <geometry><box><size>13.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_14'>
+          <pose>-21.800 2.230 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_14'>
+          <pose>-21.800 2.230 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_15'>
+          <pose>9.800 2.230 1.0 0 0 0</pose>
+          <geometry><box><size>13.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_15'>
+          <pose>9.800 2.230 1.0 0 0 0</pose>
+          <geometry><box><size>13.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_16'>
+          <pose>-21.800 2.630 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_16'>
+          <pose>-21.800 2.630 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_17'>
+          <pose>9.800 2.630 1.0 0 0 0</pose>
+          <geometry><box><size>13.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_17'>
+          <pose>9.800 2.630 1.0 0 0 0</pose>
+          <geometry><box><size>13.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_18'>
+          <pose>-21.800 3.030 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_18'>
+          <pose>-21.800 3.030 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_19'>
+          <pose>9.800 3.030 1.0 0 0 0</pose>
+          <geometry><box><size>13.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_19'>
+          <pose>9.800 3.030 1.0 0 0 0</pose>
+          <geometry><box><size>13.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_20'>
+          <pose>-21.800 3.430 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_20'>
+          <pose>-21.800 3.430 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_21'>
+          <pose>9.600 3.430 1.0 0 0 0</pose>
+          <geometry><box><size>13.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_21'>
+          <pose>9.600 3.430 1.0 0 0 0</pose>
+          <geometry><box><size>13.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_22'>
+          <pose>-21.800 3.830 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_22'>
+          <pose>-21.800 3.830 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_23'>
+          <pose>9.600 3.830 1.0 0 0 0</pose>
+          <geometry><box><size>13.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_23'>
+          <pose>9.600 3.830 1.0 0 0 0</pose>
+          <geometry><box><size>13.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_24'>
+          <pose>-21.800 4.230 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_24'>
+          <pose>-21.800 4.230 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_25'>
+          <pose>9.600 4.230 1.0 0 0 0</pose>
+          <geometry><box><size>13.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_25'>
+          <pose>9.600 4.230 1.0 0 0 0</pose>
+          <geometry><box><size>13.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_26'>
+          <pose>-21.800 4.630 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_26'>
+          <pose>-21.800 4.630 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_27'>
+          <pose>9.600 4.630 1.0 0 0 0</pose>
+          <geometry><box><size>13.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_27'>
+          <pose>9.600 4.630 1.0 0 0 0</pose>
+          <geometry><box><size>13.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_28'>
+          <pose>-21.800 5.030 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_28'>
+          <pose>-21.800 5.030 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_29'>
+          <pose>9.600 5.030 1.0 0 0 0</pose>
+          <geometry><box><size>13.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_29'>
+          <pose>9.600 5.030 1.0 0 0 0</pose>
+          <geometry><box><size>13.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_30'>
+          <pose>-21.800 5.430 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_30'>
+          <pose>-21.800 5.430 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_31'>
+          <pose>9.600 5.430 1.0 0 0 0</pose>
+          <geometry><box><size>13.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_31'>
+          <pose>9.600 5.430 1.0 0 0 0</pose>
+          <geometry><box><size>13.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_32'>
+          <pose>-21.600 5.830 1.0 0 0 0</pose>
+          <geometry><box><size>37.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_32'>
+          <pose>-21.600 5.830 1.0 0 0 0</pose>
+          <geometry><box><size>37.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_33'>
+          <pose>10.200 5.830 1.0 0 0 0</pose>
+          <geometry><box><size>12.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_33'>
+          <pose>10.200 5.830 1.0 0 0 0</pose>
+          <geometry><box><size>12.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_34'>
+          <pose>-21.600 6.230 1.0 0 0 0</pose>
+          <geometry><box><size>37.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_34'>
+          <pose>-21.600 6.230 1.0 0 0 0</pose>
+          <geometry><box><size>37.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_35'>
+          <pose>10.400 6.230 1.0 0 0 0</pose>
+          <geometry><box><size>12.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_35'>
+          <pose>10.400 6.230 1.0 0 0 0</pose>
+          <geometry><box><size>12.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_36'>
+          <pose>-21.600 6.630 1.0 0 0 0</pose>
+          <geometry><box><size>37.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_36'>
+          <pose>-21.600 6.630 1.0 0 0 0</pose>
+          <geometry><box><size>37.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_37'>
+          <pose>10.400 6.630 1.0 0 0 0</pose>
+          <geometry><box><size>12.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_37'>
+          <pose>10.400 6.630 1.0 0 0 0</pose>
+          <geometry><box><size>12.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_38'>
+          <pose>-21.600 7.030 1.0 0 0 0</pose>
+          <geometry><box><size>37.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_38'>
+          <pose>-21.600 7.030 1.0 0 0 0</pose>
+          <geometry><box><size>37.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_39'>
+          <pose>10.400 7.030 1.0 0 0 0</pose>
+          <geometry><box><size>12.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_39'>
+          <pose>10.400 7.030 1.0 0 0 0</pose>
+          <geometry><box><size>12.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_40'>
+          <pose>-21.600 7.430 1.0 0 0 0</pose>
+          <geometry><box><size>37.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_40'>
+          <pose>-21.600 7.430 1.0 0 0 0</pose>
+          <geometry><box><size>37.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_41'>
+          <pose>10.600 7.430 1.0 0 0 0</pose>
+          <geometry><box><size>11.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_41'>
+          <pose>10.600 7.430 1.0 0 0 0</pose>
+          <geometry><box><size>11.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_42'>
+          <pose>-21.800 7.830 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_42'>
+          <pose>-21.800 7.830 1.0 0 0 0</pose>
+          <geometry><box><size>37.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_43'>
+          <pose>10.600 7.830 1.0 0 0 0</pose>
+          <geometry><box><size>11.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_43'>
+          <pose>10.600 7.830 1.0 0 0 0</pose>
+          <geometry><box><size>11.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_44'>
+          <pose>-22.000 8.230 1.0 0 0 0</pose>
+          <geometry><box><size>36.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_44'>
+          <pose>-22.000 8.230 1.0 0 0 0</pose>
+          <geometry><box><size>36.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_45'>
+          <pose>7.400 8.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_45'>
+          <pose>7.400 8.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_46'>
+          <pose>14.000 8.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_46'>
+          <pose>14.000 8.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_47'>
+          <pose>-31.200 8.630 1.0 0 0 0</pose>
+          <geometry><box><size>18.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_47'>
+          <pose>-31.200 8.630 1.0 0 0 0</pose>
+          <geometry><box><size>18.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_48'>
+          <pose>-15.000 8.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_48'>
+          <pose>-15.000 8.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_49'>
+          <pose>7.400 8.630 1.0 0 0 0</pose>
+          <geometry><box><size>1.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_49'>
+          <pose>7.400 8.630 1.0 0 0 0</pose>
+          <geometry><box><size>1.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_50'>
+          <pose>14.000 8.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_50'>
+          <pose>14.000 8.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_51'>
+          <pose>-31.600 9.030 1.0 0 0 0</pose>
+          <geometry><box><size>17.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_51'>
+          <pose>-31.600 9.030 1.0 0 0 0</pose>
+          <geometry><box><size>17.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_52'>
+          <pose>-14.600 9.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_52'>
+          <pose>-14.600 9.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_53'>
+          <pose>14.000 9.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_53'>
+          <pose>14.000 9.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_54'>
+          <pose>-32.400 9.430 1.0 0 0 0</pose>
+          <geometry><box><size>16.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_54'>
+          <pose>-32.400 9.430 1.0 0 0 0</pose>
+          <geometry><box><size>16.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_55'>
+          <pose>14.000 9.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_55'>
+          <pose>14.000 9.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_56'>
+          <pose>-33.600 9.830 1.0 0 0 0</pose>
+          <geometry><box><size>13.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_56'>
+          <pose>-33.600 9.830 1.0 0 0 0</pose>
+          <geometry><box><size>13.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_57'>
+          <pose>14.000 9.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_57'>
+          <pose>14.000 9.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_58'>
+          <pose>-34.000 10.230 1.0 0 0 0</pose>
+          <geometry><box><size>12.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_58'>
+          <pose>-34.000 10.230 1.0 0 0 0</pose>
+          <geometry><box><size>12.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_59'>
+          <pose>14.000 10.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_59'>
+          <pose>14.000 10.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_60'>
+          <pose>-34.400 10.630 1.0 0 0 0</pose>
+          <geometry><box><size>12.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_60'>
+          <pose>-34.400 10.630 1.0 0 0 0</pose>
+          <geometry><box><size>12.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_61'>
+          <pose>14.000 10.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_61'>
+          <pose>14.000 10.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_62'>
+          <pose>-34.600 11.030 1.0 0 0 0</pose>
+          <geometry><box><size>11.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_62'>
+          <pose>-34.600 11.030 1.0 0 0 0</pose>
+          <geometry><box><size>11.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_63'>
+          <pose>14.000 11.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_63'>
+          <pose>14.000 11.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_64'>
+          <pose>-34.600 11.430 1.0 0 0 0</pose>
+          <geometry><box><size>11.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_64'>
+          <pose>-34.600 11.430 1.0 0 0 0</pose>
+          <geometry><box><size>11.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_65'>
+          <pose>14.000 11.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_65'>
+          <pose>14.000 11.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_66'>
+          <pose>-34.800 11.830 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_66'>
+          <pose>-34.800 11.830 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_67'>
+          <pose>14.000 11.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_67'>
+          <pose>14.000 11.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_68'>
+          <pose>-34.800 12.230 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_68'>
+          <pose>-34.800 12.230 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_69'>
+          <pose>14.000 12.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_69'>
+          <pose>14.000 12.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_70'>
+          <pose>-34.800 12.630 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_70'>
+          <pose>-34.800 12.630 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_71'>
+          <pose>14.000 12.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_71'>
+          <pose>14.000 12.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_72'>
+          <pose>-34.800 13.030 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_72'>
+          <pose>-34.800 13.030 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_73'>
+          <pose>14.000 13.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_73'>
+          <pose>14.000 13.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_74'>
+          <pose>-34.800 13.430 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_74'>
+          <pose>-34.800 13.430 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_75'>
+          <pose>14.200 13.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_75'>
+          <pose>14.200 13.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_76'>
+          <pose>-34.800 13.830 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_76'>
+          <pose>-34.800 13.830 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_77'>
+          <pose>14.200 13.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_77'>
+          <pose>14.200 13.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_78'>
+          <pose>-34.800 14.230 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_78'>
+          <pose>-34.800 14.230 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_79'>
+          <pose>14.200 14.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_79'>
+          <pose>14.200 14.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_80'>
+          <pose>-34.800 14.630 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_80'>
+          <pose>-34.800 14.630 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_81'>
+          <pose>14.200 14.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_81'>
+          <pose>14.200 14.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_82'>
+          <pose>-34.800 15.030 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_82'>
+          <pose>-34.800 15.030 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_83'>
+          <pose>14.200 15.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_83'>
+          <pose>14.200 15.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_84'>
+          <pose>-34.800 15.430 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_84'>
+          <pose>-34.800 15.430 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_85'>
+          <pose>14.200 15.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_85'>
+          <pose>14.200 15.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_86'>
+          <pose>-34.800 15.830 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_86'>
+          <pose>-34.800 15.830 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_87'>
+          <pose>-19.000 15.830 1.0 0 0 0</pose>
+          <geometry><box><size>2.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_87'>
+          <pose>-19.000 15.830 1.0 0 0 0</pose>
+          <geometry><box><size>2.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_88'>
+          <pose>14.200 15.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_88'>
+          <pose>14.200 15.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_89'>
+          <pose>-34.800 16.230 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_89'>
+          <pose>-34.800 16.230 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_90'>
+          <pose>-19.000 16.230 1.0 0 0 0</pose>
+          <geometry><box><size>2.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_90'>
+          <pose>-19.000 16.230 1.0 0 0 0</pose>
+          <geometry><box><size>2.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_91'>
+          <pose>0.000 16.230 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_91'>
+          <pose>0.000 16.230 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_92'>
+          <pose>14.200 16.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_92'>
+          <pose>14.200 16.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_93'>
+          <pose>-34.800 16.630 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_93'>
+          <pose>-34.800 16.630 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_94'>
+          <pose>-19.000 16.630 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_94'>
+          <pose>-19.000 16.630 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_95'>
+          <pose>0.000 16.630 1.0 0 0 0</pose>
+          <geometry><box><size>2.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_95'>
+          <pose>0.000 16.630 1.0 0 0 0</pose>
+          <geometry><box><size>2.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_96'>
+          <pose>14.200 16.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_96'>
+          <pose>14.200 16.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_97'>
+          <pose>-34.800 17.030 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_97'>
+          <pose>-34.800 17.030 1.0 0 0 0</pose>
+          <geometry><box><size>11.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_98'>
+          <pose>-19.000 17.030 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_98'>
+          <pose>-19.000 17.030 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_99'>
+          <pose>0.000 17.030 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_99'>
+          <pose>0.000 17.030 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_100'>
+          <pose>14.200 17.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_100'>
+          <pose>14.200 17.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_101'>
+          <pose>-35.000 17.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_101'>
+          <pose>-35.000 17.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_102'>
+          <pose>-19.000 17.430 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_102'>
+          <pose>-19.000 17.430 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_103'>
+          <pose>0.000 17.430 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_103'>
+          <pose>0.000 17.430 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_104'>
+          <pose>14.200 17.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_104'>
+          <pose>14.200 17.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_105'>
+          <pose>-35.000 17.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_105'>
+          <pose>-35.000 17.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_106'>
+          <pose>-19.000 17.830 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_106'>
+          <pose>-19.000 17.830 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_107'>
+          <pose>0.200 17.830 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_107'>
+          <pose>0.200 17.830 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_108'>
+          <pose>14.200 17.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_108'>
+          <pose>14.200 17.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_109'>
+          <pose>-35.000 18.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_109'>
+          <pose>-35.000 18.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_110'>
+          <pose>-19.000 18.230 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_110'>
+          <pose>-19.000 18.230 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_111'>
+          <pose>0.000 18.230 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_111'>
+          <pose>0.000 18.230 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_112'>
+          <pose>14.200 18.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_112'>
+          <pose>14.200 18.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_113'>
+          <pose>-35.200 18.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_113'>
+          <pose>-35.200 18.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_114'>
+          <pose>-19.000 18.630 1.0 0 0 0</pose>
+          <geometry><box><size>2.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_114'>
+          <pose>-19.000 18.630 1.0 0 0 0</pose>
+          <geometry><box><size>2.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_115'>
+          <pose>0.000 18.630 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_115'>
+          <pose>0.000 18.630 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_116'>
+          <pose>14.200 18.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_116'>
+          <pose>14.200 18.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_117'>
+          <pose>-35.200 19.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_117'>
+          <pose>-35.200 19.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_118'>
+          <pose>-19.000 19.030 1.0 0 0 0</pose>
+          <geometry><box><size>2.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_118'>
+          <pose>-19.000 19.030 1.0 0 0 0</pose>
+          <geometry><box><size>2.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_119'>
+          <pose>0.000 19.030 1.0 0 0 0</pose>
+          <geometry><box><size>2.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_119'>
+          <pose>0.000 19.030 1.0 0 0 0</pose>
+          <geometry><box><size>2.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_120'>
+          <pose>14.200 19.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_120'>
+          <pose>14.200 19.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_121'>
+          <pose>-35.200 19.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_121'>
+          <pose>-35.200 19.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_122'>
+          <pose>0.000 19.430 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_122'>
+          <pose>0.000 19.430 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_123'>
+          <pose>14.000 19.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_123'>
+          <pose>14.000 19.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_124'>
+          <pose>-35.200 19.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_124'>
+          <pose>-35.200 19.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_125'>
+          <pose>14.000 19.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_125'>
+          <pose>14.000 19.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_126'>
+          <pose>-35.200 20.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_126'>
+          <pose>-35.200 20.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_127'>
+          <pose>14.200 20.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_127'>
+          <pose>14.200 20.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_128'>
+          <pose>-35.200 20.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_128'>
+          <pose>-35.200 20.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_129'>
+          <pose>14.000 20.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_129'>
+          <pose>14.000 20.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_130'>
+          <pose>-35.200 21.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_130'>
+          <pose>-35.200 21.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_131'>
+          <pose>14.000 21.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_131'>
+          <pose>14.000 21.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_132'>
+          <pose>-35.200 21.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_132'>
+          <pose>-35.200 21.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_133'>
+          <pose>14.000 21.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_133'>
+          <pose>14.000 21.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_134'>
+          <pose>-35.200 21.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_134'>
+          <pose>-35.200 21.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_135'>
+          <pose>14.000 21.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_135'>
+          <pose>14.000 21.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_136'>
+          <pose>-35.200 22.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_136'>
+          <pose>-35.200 22.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_137'>
+          <pose>14.000 22.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_137'>
+          <pose>14.000 22.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_138'>
+          <pose>-35.200 22.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_138'>
+          <pose>-35.200 22.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_139'>
+          <pose>14.000 22.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_139'>
+          <pose>14.000 22.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_140'>
+          <pose>-35.400 23.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_140'>
+          <pose>-35.400 23.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_141'>
+          <pose>14.000 23.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_141'>
+          <pose>14.000 23.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_142'>
+          <pose>-35.400 23.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_142'>
+          <pose>-35.400 23.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_143'>
+          <pose>14.000 23.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_143'>
+          <pose>14.000 23.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_144'>
+          <pose>-35.400 23.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_144'>
+          <pose>-35.400 23.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_145'>
+          <pose>14.000 23.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_145'>
+          <pose>14.000 23.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_146'>
+          <pose>-35.400 24.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_146'>
+          <pose>-35.400 24.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_147'>
+          <pose>13.800 24.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_147'>
+          <pose>13.800 24.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_148'>
+          <pose>-35.400 24.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_148'>
+          <pose>-35.400 24.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_149'>
+          <pose>13.200 24.630 1.0 0 0 0</pose>
+          <geometry><box><size>6.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_149'>
+          <pose>13.200 24.630 1.0 0 0 0</pose>
+          <geometry><box><size>6.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_150'>
+          <pose>-35.400 25.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_150'>
+          <pose>-35.400 25.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_151'>
+          <pose>12.800 25.030 1.0 0 0 0</pose>
+          <geometry><box><size>7.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_151'>
+          <pose>12.800 25.030 1.0 0 0 0</pose>
+          <geometry><box><size>7.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_152'>
+          <pose>-35.400 25.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_152'>
+          <pose>-35.400 25.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_153'>
+          <pose>-14.400 25.430 1.0 0 0 0</pose>
+          <geometry><box><size>0.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_153'>
+          <pose>-14.400 25.430 1.0 0 0 0</pose>
+          <geometry><box><size>0.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_154'>
+          <pose>12.600 25.430 1.0 0 0 0</pose>
+          <geometry><box><size>7.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_154'>
+          <pose>12.600 25.430 1.0 0 0 0</pose>
+          <geometry><box><size>7.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_155'>
+          <pose>-35.400 25.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_155'>
+          <pose>-35.400 25.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_156'>
+          <pose>-14.400 25.830 1.0 0 0 0</pose>
+          <geometry><box><size>2.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_156'>
+          <pose>-14.400 25.830 1.0 0 0 0</pose>
+          <geometry><box><size>2.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_157'>
+          <pose>12.600 25.830 1.0 0 0 0</pose>
+          <geometry><box><size>7.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_157'>
+          <pose>12.600 25.830 1.0 0 0 0</pose>
+          <geometry><box><size>7.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_158'>
+          <pose>-35.400 26.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_158'>
+          <pose>-35.400 26.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_159'>
+          <pose>-14.400 26.230 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_159'>
+          <pose>-14.400 26.230 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_160'>
+          <pose>12.600 26.230 1.0 0 0 0</pose>
+          <geometry><box><size>7.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_160'>
+          <pose>12.600 26.230 1.0 0 0 0</pose>
+          <geometry><box><size>7.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_161'>
+          <pose>-35.400 26.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_161'>
+          <pose>-35.400 26.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_162'>
+          <pose>-14.600 26.630 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_162'>
+          <pose>-14.600 26.630 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_163'>
+          <pose>12.600 26.630 1.0 0 0 0</pose>
+          <geometry><box><size>7.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_163'>
+          <pose>12.600 26.630 1.0 0 0 0</pose>
+          <geometry><box><size>7.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_164'>
+          <pose>-35.400 27.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_164'>
+          <pose>-35.400 27.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_165'>
+          <pose>-14.400 27.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_165'>
+          <pose>-14.400 27.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_166'>
+          <pose>12.600 27.030 1.0 0 0 0</pose>
+          <geometry><box><size>7.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_166'>
+          <pose>12.600 27.030 1.0 0 0 0</pose>
+          <geometry><box><size>7.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_167'>
+          <pose>-35.400 27.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_167'>
+          <pose>-35.400 27.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_168'>
+          <pose>-14.400 27.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_168'>
+          <pose>-14.400 27.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_169'>
+          <pose>12.800 27.430 1.0 0 0 0</pose>
+          <geometry><box><size>7.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_169'>
+          <pose>12.800 27.430 1.0 0 0 0</pose>
+          <geometry><box><size>7.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_170'>
+          <pose>-35.400 27.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_170'>
+          <pose>-35.400 27.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_171'>
+          <pose>-14.600 27.830 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_171'>
+          <pose>-14.600 27.830 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_172'>
+          <pose>14.000 27.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_172'>
+          <pose>14.000 27.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_173'>
+          <pose>-35.400 28.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_173'>
+          <pose>-35.400 28.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_174'>
+          <pose>-14.400 28.230 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_174'>
+          <pose>-14.400 28.230 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_175'>
+          <pose>14.000 28.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_175'>
+          <pose>14.000 28.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_176'>
+          <pose>-35.400 28.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_176'>
+          <pose>-35.400 28.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_177'>
+          <pose>-14.600 28.630 1.0 0 0 0</pose>
+          <geometry><box><size>2.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_177'>
+          <pose>-14.600 28.630 1.0 0 0 0</pose>
+          <geometry><box><size>2.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_178'>
+          <pose>14.000 28.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_178'>
+          <pose>14.000 28.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_179'>
+          <pose>-35.400 29.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_179'>
+          <pose>-35.400 29.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_180'>
+          <pose>-14.400 29.030 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_180'>
+          <pose>-14.400 29.030 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_181'>
+          <pose>14.000 29.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_181'>
+          <pose>14.000 29.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_182'>
+          <pose>-35.400 29.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_182'>
+          <pose>-35.400 29.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_183'>
+          <pose>14.000 29.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_183'>
+          <pose>14.000 29.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_184'>
+          <pose>-35.400 29.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_184'>
+          <pose>-35.400 29.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_185'>
+          <pose>14.000 29.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_185'>
+          <pose>14.000 29.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_186'>
+          <pose>-35.400 30.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_186'>
+          <pose>-35.400 30.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_187'>
+          <pose>14.000 30.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_187'>
+          <pose>14.000 30.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_188'>
+          <pose>-35.400 30.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_188'>
+          <pose>-35.400 30.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_189'>
+          <pose>14.000 30.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_189'>
+          <pose>14.000 30.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_190'>
+          <pose>-35.400 31.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_190'>
+          <pose>-35.400 31.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_191'>
+          <pose>14.000 31.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_191'>
+          <pose>14.000 31.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_192'>
+          <pose>-35.400 31.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_192'>
+          <pose>-35.400 31.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_193'>
+          <pose>-4.200 31.430 1.0 0 0 0</pose>
+          <geometry><box><size>1.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_193'>
+          <pose>-4.200 31.430 1.0 0 0 0</pose>
+          <geometry><box><size>1.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_194'>
+          <pose>14.000 31.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_194'>
+          <pose>14.000 31.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_195'>
+          <pose>-35.400 31.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_195'>
+          <pose>-35.400 31.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_196'>
+          <pose>-4.200 31.830 1.0 0 0 0</pose>
+          <geometry><box><size>2.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_196'>
+          <pose>-4.200 31.830 1.0 0 0 0</pose>
+          <geometry><box><size>2.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_197'>
+          <pose>14.000 31.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_197'>
+          <pose>14.000 31.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_198'>
+          <pose>-35.400 32.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_198'>
+          <pose>-35.400 32.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_199'>
+          <pose>-4.400 32.230 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_199'>
+          <pose>-4.400 32.230 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_200'>
+          <pose>14.000 32.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_200'>
+          <pose>14.000 32.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_201'>
+          <pose>-35.400 32.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_201'>
+          <pose>-35.400 32.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_202'>
+          <pose>-4.200 32.630 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_202'>
+          <pose>-4.200 32.630 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_203'>
+          <pose>14.000 32.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_203'>
+          <pose>14.000 32.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_204'>
+          <pose>-35.400 33.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_204'>
+          <pose>-35.400 33.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_205'>
+          <pose>-4.200 33.030 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_205'>
+          <pose>-4.200 33.030 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_206'>
+          <pose>14.000 33.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_206'>
+          <pose>14.000 33.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_207'>
+          <pose>-35.400 33.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_207'>
+          <pose>-35.400 33.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_208'>
+          <pose>-4.200 33.430 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_208'>
+          <pose>-4.200 33.430 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_209'>
+          <pose>14.000 33.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_209'>
+          <pose>14.000 33.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_210'>
+          <pose>-35.400 33.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_210'>
+          <pose>-35.400 33.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_211'>
+          <pose>-4.200 33.830 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_211'>
+          <pose>-4.200 33.830 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_212'>
+          <pose>14.000 33.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_212'>
+          <pose>14.000 33.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_213'>
+          <pose>-35.400 34.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_213'>
+          <pose>-35.400 34.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_214'>
+          <pose>-4.400 34.230 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_214'>
+          <pose>-4.400 34.230 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_215'>
+          <pose>13.800 34.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_215'>
+          <pose>13.800 34.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_216'>
+          <pose>-35.400 34.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_216'>
+          <pose>-35.400 34.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_217'>
+          <pose>-4.400 34.630 1.0 0 0 0</pose>
+          <geometry><box><size>2.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_217'>
+          <pose>-4.400 34.630 1.0 0 0 0</pose>
+          <geometry><box><size>2.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_218'>
+          <pose>13.800 34.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_218'>
+          <pose>13.800 34.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_219'>
+          <pose>-35.400 35.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_219'>
+          <pose>-35.400 35.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_220'>
+          <pose>-4.200 35.030 1.0 0 0 0</pose>
+          <geometry><box><size>0.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_220'>
+          <pose>-4.200 35.030 1.0 0 0 0</pose>
+          <geometry><box><size>0.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_221'>
+          <pose>13.800 35.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_221'>
+          <pose>13.800 35.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_222'>
+          <pose>-35.400 35.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_222'>
+          <pose>-35.400 35.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_223'>
+          <pose>13.800 35.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_223'>
+          <pose>13.800 35.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_224'>
+          <pose>-35.400 35.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_224'>
+          <pose>-35.400 35.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_225'>
+          <pose>13.800 35.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_225'>
+          <pose>13.800 35.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_226'>
+          <pose>-35.400 36.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_226'>
+          <pose>-35.400 36.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_227'>
+          <pose>13.800 36.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_227'>
+          <pose>13.800 36.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_228'>
+          <pose>-35.400 36.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_228'>
+          <pose>-35.400 36.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_229'>
+          <pose>13.800 36.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_229'>
+          <pose>13.800 36.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_230'>
+          <pose>-35.400 37.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_230'>
+          <pose>-35.400 37.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_231'>
+          <pose>13.800 37.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_231'>
+          <pose>13.800 37.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_232'>
+          <pose>-35.400 37.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_232'>
+          <pose>-35.400 37.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_233'>
+          <pose>13.800 37.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_233'>
+          <pose>13.800 37.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_234'>
+          <pose>-35.400 37.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_234'>
+          <pose>-35.400 37.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_235'>
+          <pose>13.800 37.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_235'>
+          <pose>13.800 37.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_236'>
+          <pose>-35.400 38.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_236'>
+          <pose>-35.400 38.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_237'>
+          <pose>-21.400 38.230 1.0 0 0 0</pose>
+          <geometry><box><size>0.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_237'>
+          <pose>-21.400 38.230 1.0 0 0 0</pose>
+          <geometry><box><size>0.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_238'>
+          <pose>13.800 38.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_238'>
+          <pose>13.800 38.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_239'>
+          <pose>-35.400 38.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_239'>
+          <pose>-35.400 38.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_240'>
+          <pose>-21.200 38.630 1.0 0 0 0</pose>
+          <geometry><box><size>2.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_240'>
+          <pose>-21.200 38.630 1.0 0 0 0</pose>
+          <geometry><box><size>2.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_241'>
+          <pose>13.800 38.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_241'>
+          <pose>13.800 38.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_242'>
+          <pose>-35.400 39.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_242'>
+          <pose>-35.400 39.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_243'>
+          <pose>-21.200 39.030 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_243'>
+          <pose>-21.200 39.030 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_244'>
+          <pose>13.800 39.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_244'>
+          <pose>13.800 39.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_245'>
+          <pose>-35.400 39.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_245'>
+          <pose>-35.400 39.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_246'>
+          <pose>-21.400 39.430 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_246'>
+          <pose>-21.400 39.430 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_247'>
+          <pose>13.800 39.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_247'>
+          <pose>13.800 39.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_248'>
+          <pose>-35.400 39.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_248'>
+          <pose>-35.400 39.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_249'>
+          <pose>-21.400 39.830 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_249'>
+          <pose>-21.400 39.830 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_250'>
+          <pose>13.800 39.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_250'>
+          <pose>13.800 39.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_251'>
+          <pose>-35.400 40.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_251'>
+          <pose>-35.400 40.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_252'>
+          <pose>-21.400 40.230 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_252'>
+          <pose>-21.400 40.230 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_253'>
+          <pose>13.800 40.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_253'>
+          <pose>13.800 40.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_254'>
+          <pose>-35.400 40.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_254'>
+          <pose>-35.400 40.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_255'>
+          <pose>-21.400 40.630 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_255'>
+          <pose>-21.400 40.630 1.0 0 0 0</pose>
+          <geometry><box><size>3.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_256'>
+          <pose>13.800 40.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_256'>
+          <pose>13.800 40.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_257'>
+          <pose>-35.400 41.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_257'>
+          <pose>-35.400 41.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_258'>
+          <pose>-21.200 41.030 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_258'>
+          <pose>-21.200 41.030 1.0 0 0 0</pose>
+          <geometry><box><size>3.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_259'>
+          <pose>13.600 41.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_259'>
+          <pose>13.600 41.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_260'>
+          <pose>-35.400 41.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_260'>
+          <pose>-35.400 41.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_261'>
+          <pose>-21.200 41.430 1.0 0 0 0</pose>
+          <geometry><box><size>2.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_261'>
+          <pose>-21.200 41.430 1.0 0 0 0</pose>
+          <geometry><box><size>2.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_262'>
+          <pose>13.600 41.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_262'>
+          <pose>13.600 41.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_263'>
+          <pose>-35.400 41.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_263'>
+          <pose>-35.400 41.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_264'>
+          <pose>-21.400 41.830 1.0 0 0 0</pose>
+          <geometry><box><size>1.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_264'>
+          <pose>-21.400 41.830 1.0 0 0 0</pose>
+          <geometry><box><size>1.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_265'>
+          <pose>13.600 41.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_265'>
+          <pose>13.600 41.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_266'>
+          <pose>-35.400 42.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_266'>
+          <pose>-35.400 42.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_267'>
+          <pose>13.600 42.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_267'>
+          <pose>13.600 42.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_268'>
+          <pose>-35.400 42.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_268'>
+          <pose>-35.400 42.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_269'>
+          <pose>13.600 42.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_269'>
+          <pose>13.600 42.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_270'>
+          <pose>-35.400 43.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_270'>
+          <pose>-35.400 43.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_271'>
+          <pose>13.600 43.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_271'>
+          <pose>13.600 43.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_272'>
+          <pose>-35.400 43.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_272'>
+          <pose>-35.400 43.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_273'>
+          <pose>13.600 43.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_273'>
+          <pose>13.600 43.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_274'>
+          <pose>-35.400 43.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_274'>
+          <pose>-35.400 43.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_275'>
+          <pose>13.600 43.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_275'>
+          <pose>13.600 43.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_276'>
+          <pose>-35.400 44.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_276'>
+          <pose>-35.400 44.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_277'>
+          <pose>13.600 44.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_277'>
+          <pose>13.600 44.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_278'>
+          <pose>-35.400 44.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_278'>
+          <pose>-35.400 44.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_279'>
+          <pose>13.600 44.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_279'>
+          <pose>13.600 44.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_280'>
+          <pose>-35.400 45.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_280'>
+          <pose>-35.400 45.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_281'>
+          <pose>13.600 45.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_281'>
+          <pose>13.600 45.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_282'>
+          <pose>-35.400 45.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_282'>
+          <pose>-35.400 45.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_283'>
+          <pose>13.600 45.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_283'>
+          <pose>13.600 45.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_284'>
+          <pose>-35.400 45.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_284'>
+          <pose>-35.400 45.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_285'>
+          <pose>13.600 45.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_285'>
+          <pose>13.600 45.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_286'>
+          <pose>-35.400 46.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_286'>
+          <pose>-35.400 46.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_287'>
+          <pose>5.200 46.230 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_287'>
+          <pose>5.200 46.230 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_288'>
+          <pose>13.600 46.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_288'>
+          <pose>13.600 46.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_289'>
+          <pose>-35.400 46.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_289'>
+          <pose>-35.400 46.630 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_290'>
+          <pose>5.200 46.630 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_290'>
+          <pose>5.200 46.630 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_291'>
+          <pose>13.600 46.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_291'>
+          <pose>13.600 46.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_292'>
+          <pose>-35.400 47.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_292'>
+          <pose>-35.400 47.030 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_293'>
+          <pose>5.200 47.030 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_293'>
+          <pose>5.200 47.030 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_294'>
+          <pose>13.600 47.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_294'>
+          <pose>13.600 47.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_295'>
+          <pose>-35.400 47.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_295'>
+          <pose>-35.400 47.430 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_296'>
+          <pose>5.200 47.430 1.0 0 0 0</pose>
+          <geometry><box><size>0.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_296'>
+          <pose>5.200 47.430 1.0 0 0 0</pose>
+          <geometry><box><size>0.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_297'>
+          <pose>13.600 47.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_297'>
+          <pose>13.600 47.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_298'>
+          <pose>-35.400 47.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_298'>
+          <pose>-35.400 47.830 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_299'>
+          <pose>13.600 47.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_299'>
+          <pose>13.600 47.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_300'>
+          <pose>-35.400 48.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_300'>
+          <pose>-35.400 48.230 1.0 0 0 0</pose>
+          <geometry><box><size>10.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_301'>
+          <pose>-3.600 48.230 1.0 0 0 0</pose>
+          <geometry><box><size>6.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_301'>
+          <pose>-3.600 48.230 1.0 0 0 0</pose>
+          <geometry><box><size>6.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_302'>
+          <pose>13.600 48.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_302'>
+          <pose>13.600 48.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_303'>
+          <pose>-20.400 48.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_303'>
+          <pose>-20.400 48.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_304'>
+          <pose>13.600 48.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_304'>
+          <pose>13.600 48.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_305'>
+          <pose>-20.400 49.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_305'>
+          <pose>-20.400 49.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_306'>
+          <pose>13.600 49.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_306'>
+          <pose>13.600 49.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_307'>
+          <pose>-20.400 49.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_307'>
+          <pose>-20.400 49.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_308'>
+          <pose>13.600 49.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_308'>
+          <pose>13.600 49.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_309'>
+          <pose>-20.400 49.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_309'>
+          <pose>-20.400 49.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_310'>
+          <pose>13.600 49.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_310'>
+          <pose>13.600 49.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_311'>
+          <pose>-20.400 50.230 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_311'>
+          <pose>-20.400 50.230 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_312'>
+          <pose>13.600 50.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_312'>
+          <pose>13.600 50.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_313'>
+          <pose>-20.400 50.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_313'>
+          <pose>-20.400 50.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_314'>
+          <pose>13.600 50.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_314'>
+          <pose>13.600 50.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_315'>
+          <pose>-20.400 51.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_315'>
+          <pose>-20.400 51.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_316'>
+          <pose>13.600 51.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_316'>
+          <pose>13.600 51.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_317'>
+          <pose>-20.400 51.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_317'>
+          <pose>-20.400 51.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_318'>
+          <pose>13.600 51.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_318'>
+          <pose>13.600 51.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_319'>
+          <pose>-20.400 51.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_319'>
+          <pose>-20.400 51.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_320'>
+          <pose>13.600 51.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_320'>
+          <pose>13.600 51.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_321'>
+          <pose>-20.400 52.230 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_321'>
+          <pose>-20.400 52.230 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_322'>
+          <pose>13.600 52.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_322'>
+          <pose>13.600 52.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_323'>
+          <pose>-20.400 52.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_323'>
+          <pose>-20.400 52.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_324'>
+          <pose>13.600 52.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_324'>
+          <pose>13.600 52.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_325'>
+          <pose>-20.400 53.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_325'>
+          <pose>-20.400 53.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_326'>
+          <pose>13.600 53.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_326'>
+          <pose>13.600 53.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_327'>
+          <pose>-20.400 53.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_327'>
+          <pose>-20.400 53.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_328'>
+          <pose>13.600 53.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_328'>
+          <pose>13.600 53.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_329'>
+          <pose>-20.400 53.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_329'>
+          <pose>-20.400 53.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_330'>
+          <pose>13.600 53.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_330'>
+          <pose>13.600 53.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_331'>
+          <pose>-20.400 54.230 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_331'>
+          <pose>-20.400 54.230 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_332'>
+          <pose>13.600 54.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_332'>
+          <pose>13.600 54.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_333'>
+          <pose>-20.400 54.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_333'>
+          <pose>-20.400 54.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_334'>
+          <pose>13.600 54.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_334'>
+          <pose>13.600 54.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_335'>
+          <pose>-20.400 55.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_335'>
+          <pose>-20.400 55.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_336'>
+          <pose>13.800 55.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_336'>
+          <pose>13.800 55.030 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_337'>
+          <pose>-20.400 55.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_337'>
+          <pose>-20.400 55.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_338'>
+          <pose>13.800 55.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_338'>
+          <pose>13.800 55.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_339'>
+          <pose>-20.400 55.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_339'>
+          <pose>-20.400 55.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_340'>
+          <pose>13.800 55.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_340'>
+          <pose>13.800 55.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_341'>
+          <pose>-20.400 56.230 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_341'>
+          <pose>-20.400 56.230 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_342'>
+          <pose>13.800 56.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_342'>
+          <pose>13.800 56.230 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_343'>
+          <pose>-20.400 56.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_343'>
+          <pose>-20.400 56.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_344'>
+          <pose>13.800 56.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_344'>
+          <pose>13.800 56.630 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_345'>
+          <pose>-20.400 57.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_345'>
+          <pose>-20.400 57.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_346'>
+          <pose>14.000 57.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_346'>
+          <pose>14.000 57.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_347'>
+          <pose>-20.400 57.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_347'>
+          <pose>-20.400 57.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_348'>
+          <pose>14.000 57.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_348'>
+          <pose>14.000 57.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_349'>
+          <pose>-20.400 57.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_349'>
+          <pose>-20.400 57.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_350'>
+          <pose>4.800 57.830 1.0 0 0 0</pose>
+          <geometry><box><size>0.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_350'>
+          <pose>4.800 57.830 1.0 0 0 0</pose>
+          <geometry><box><size>0.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_351'>
+          <pose>14.000 57.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_351'>
+          <pose>14.000 57.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_352'>
+          <pose>-20.400 58.230 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_352'>
+          <pose>-20.400 58.230 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_353'>
+          <pose>4.800 58.230 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_353'>
+          <pose>4.800 58.230 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_354'>
+          <pose>14.000 58.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_354'>
+          <pose>14.000 58.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_355'>
+          <pose>-20.400 58.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_355'>
+          <pose>-20.400 58.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_356'>
+          <pose>4.800 58.630 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_356'>
+          <pose>4.800 58.630 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_357'>
+          <pose>14.000 58.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_357'>
+          <pose>14.000 58.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_358'>
+          <pose>-20.400 59.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_358'>
+          <pose>-20.400 59.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_359'>
+          <pose>4.800 59.030 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_359'>
+          <pose>4.800 59.030 1.0 0 0 0</pose>
+          <geometry><box><size>1.600 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_360'>
+          <pose>14.000 59.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_360'>
+          <pose>14.000 59.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_361'>
+          <pose>-20.400 59.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_361'>
+          <pose>-20.400 59.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_362'>
+          <pose>14.000 59.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_362'>
+          <pose>14.000 59.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_363'>
+          <pose>-20.400 59.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_363'>
+          <pose>-20.400 59.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_364'>
+          <pose>14.000 59.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_364'>
+          <pose>14.000 59.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_365'>
+          <pose>-20.400 60.230 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_365'>
+          <pose>-20.400 60.230 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_366'>
+          <pose>14.000 60.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_366'>
+          <pose>14.000 60.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_367'>
+          <pose>-20.400 60.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_367'>
+          <pose>-20.400 60.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_368'>
+          <pose>14.000 60.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_368'>
+          <pose>14.000 60.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_369'>
+          <pose>-20.400 61.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_369'>
+          <pose>-20.400 61.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_370'>
+          <pose>14.000 61.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_370'>
+          <pose>14.000 61.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_371'>
+          <pose>-20.400 61.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_371'>
+          <pose>-20.400 61.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_372'>
+          <pose>14.000 61.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_372'>
+          <pose>14.000 61.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_373'>
+          <pose>-20.400 61.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_373'>
+          <pose>-20.400 61.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_374'>
+          <pose>14.000 61.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_374'>
+          <pose>14.000 61.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_375'>
+          <pose>-20.400 62.230 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_375'>
+          <pose>-20.400 62.230 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_376'>
+          <pose>14.000 62.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_376'>
+          <pose>14.000 62.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_377'>
+          <pose>-20.400 62.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_377'>
+          <pose>-20.400 62.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_378'>
+          <pose>14.000 62.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_378'>
+          <pose>14.000 62.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_379'>
+          <pose>-20.400 63.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_379'>
+          <pose>-20.400 63.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_380'>
+          <pose>14.000 63.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_380'>
+          <pose>14.000 63.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_381'>
+          <pose>-20.400 63.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_381'>
+          <pose>-20.400 63.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_382'>
+          <pose>14.000 63.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_382'>
+          <pose>14.000 63.430 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_383'>
+          <pose>-20.400 63.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_383'>
+          <pose>-20.400 63.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_384'>
+          <pose>14.000 63.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_384'>
+          <pose>14.000 63.830 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_385'>
+          <pose>-20.400 64.230 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_385'>
+          <pose>-20.400 64.230 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_386'>
+          <pose>14.000 64.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_386'>
+          <pose>14.000 64.230 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_387'>
+          <pose>-20.400 64.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_387'>
+          <pose>-20.400 64.630 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_388'>
+          <pose>14.000 64.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_388'>
+          <pose>14.000 64.630 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_389'>
+          <pose>-20.400 65.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_389'>
+          <pose>-20.400 65.030 1.0 0 0 0</pose>
+          <geometry><box><size>40.000 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_390'>
+          <pose>14.000 65.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_390'>
+          <pose>14.000 65.030 1.0 0 0 0</pose>
+          <geometry><box><size>4.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_391'>
+          <pose>-20.200 65.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.400 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_391'>
+          <pose>-20.200 65.430 1.0 0 0 0</pose>
+          <geometry><box><size>40.400 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_392'>
+          <pose>13.800 65.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_392'>
+          <pose>13.800 65.430 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_393'>
+          <pose>-20.000 65.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_393'>
+          <pose>-20.000 65.830 1.0 0 0 0</pose>
+          <geometry><box><size>40.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_394'>
+          <pose>13.800 65.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_394'>
+          <pose>13.800 65.830 1.0 0 0 0</pose>
+          <geometry><box><size>5.200 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_395'>
+          <pose>-12.000 66.230 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_395'>
+          <pose>-12.000 66.230 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_396'>
+          <pose>-12.000 66.630 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_396'>
+          <pose>-12.000 66.630 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_397'>
+          <pose>-12.000 67.030 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_397'>
+          <pose>-12.000 67.030 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_398'>
+          <pose>-12.000 67.430 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_398'>
+          <pose>-12.000 67.430 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_399'>
+          <pose>-12.000 67.830 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_399'>
+          <pose>-12.000 67.830 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_400'>
+          <pose>-12.000 68.230 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_400'>
+          <pose>-12.000 68.230 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_401'>
+          <pose>-12.000 68.630 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_401'>
+          <pose>-12.000 68.630 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_402'>
+          <pose>-12.000 69.030 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_402'>
+          <pose>-12.000 69.030 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_403'>
+          <pose>-12.000 69.430 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_403'>
+          <pose>-12.000 69.430 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_404'>
+          <pose>-12.000 69.830 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_404'>
+          <pose>-12.000 69.830 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_405'>
+          <pose>-12.000 70.230 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_405'>
+          <pose>-12.000 70.230 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_406'>
+          <pose>-12.000 70.630 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_406'>
+          <pose>-12.000 70.630 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_407'>
+          <pose>-12.000 71.030 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_407'>
+          <pose>-12.000 71.030 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_408'>
+          <pose>-12.000 71.430 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_408'>
+          <pose>-12.000 71.430 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_409'>
+          <pose>-12.000 71.830 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_409'>
+          <pose>-12.000 71.830 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_410'>
+          <pose>-12.000 72.230 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_410'>
+          <pose>-12.000 72.230 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_411'>
+          <pose>-12.000 72.630 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_411'>
+          <pose>-12.000 72.630 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+        <visual name='v_412'>
+          <pose>-12.000 73.030 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+          <material><ambient>0.6 0.3 0.3 1</ambient><diffuse>0.6 0.3 0.3 1</diffuse></material>
+        </visual>
+        <collision name='c_412'>
+          <pose>-12.000 73.030 1.0 0 0 0</pose>
+          <geometry><box><size>56.800 0.400 2.0</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+  </world>
+</sdf>

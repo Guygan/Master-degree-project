@@ -1,101 +1,74 @@
 # ===================================================================
-# ekf_gps.yaml (ฉบับทดสอบ: ปิด GPS + ใช้ Velocity Fusion แก้หุ่นหมุน)
+# ekf_gps.yaml - Dual EKF Configuration
 # ===================================================================
 
-ekf_local_node:
+### 1. Local EKF (Odom Frame) ###
+ekf_filter_node_local:   # <--- ต้องชื่อนี้เป๊ะๆ ให้ตรงกับ Launch File
   ros__parameters:
-    use_sim_time: true
     frequency: 30.0
-    sensor_timeout: 0.2
     two_d_mode: true
-    publish_tf: true             # Local ต้อง publish odom -> base_link
+    publish_acceleration: false
+    publish_tf: true
     map_frame: map
     odom_frame: odom
     base_link_frame: base_footprint
-    world_frame: odom
+    world_frame: odom    # Local ยึด Odom เป็นหลัก
 
-    # --- [แก้จุดที่ 1] ใช้ Velocity ตามแบบ SLAM (เพื่อให้ล้อไม่กระตุก) ---
+    # Wheel Odometry
     odom0: /odom
-    odom0_config: [false, false, false,  # x, y, z (ปิด Position)
-                   false, false, false,  # roll, pitch, yaw
-                   true,  true,  false,  # vx, vy, vz (ใช้ Velocity)
-                   false, false, true,   # vroll, vpitch, vyaw (ใช้ Velocity หมุน)
-                   false, false, false]  # ax, ay, az
-    odom0_queue_size: 5
+    odom0_config: [false, false, false,
+                   false, false, false,
+                   true,  true,  false,
+                   false, false, true,
+                   false, false, false]
+    odom0_queue_size: 10
     odom0_differential: false
 
-    # --- IMU (ใช้ตามเดิม) ---
+    # IMU
     imu0: /imu
     imu0_config: [false, false, false,
+                  true,  true,  true,
                   false, false, false,
-                  false, false, false,
-                  false, false, true,    # v_yaw
-                  true,  false, false]   # ax, ay
-    imu0_queue_size: 5
-    imu0_differential: false
+                  true,  true,  true,
+                  true,  true,  true]
     imu0_remove_gravitational_acceleration: true
-    print_diagnostics: false
 
-# ----------------------------------------------------------------------------
-# navsat_transform_node (ปล่อยไว้เฉยๆ ได้ หรือจะ Comment ปิดใน launch ก็ได้)
-# ----------------------------------------------------------------------------
-navsat_transform_node:
-  ros__parameters:
-    use_sim_time: true
-    frequency: 10.0
-    gps_topic: "/gps/fix"
-    imu_topic: "/imu"
-    odom_topic: "/odometry/filtered"
-    world_frame: "map"
-    base_link_frame: "base_footprint"
-    orientation_frame: "base_footprint"
-    broadcast_utm_transform: true
-    publish_filtered_gps: true
-    publish_filtered_topic: "/gps/filtered"
-    magnetic_declination_radians: 0.0
-    yaw_offset: 0.0
-    zero_altitude: true
-    smooth_factor: 0.9
 
-# ----------------------------------------------------------------------------
-# ekf_global_node (ปิด GPS ชั่วคราว)
-# ----------------------------------------------------------------------------
-ekf_global_node:
+### 2. Global EKF (Map Frame) ###
+ekf_filter_node_global:  # <--- ต้องชื่อนี้เป๊ะๆ
   ros__parameters:
-    use_sim_time: true
-    frequency: 20.0
-    sensor_timeout: 0.5
+    frequency: 30.0
     two_d_mode: true
-
-    publish_tf: true             # ยังต้อง Publish map -> odom อยู่
+    publish_acceleration: false
+    publish_tf: true     # ตัวนี้จะเป็นคนปล่อย map -> odom
     map_frame: map
     odom_frame: odom
     base_link_frame: base_footprint
-    world_frame: map
+    world_frame: map     # Global ยึด Map เป็นหลัก
 
-    # รับค่าจาก Local EKF (ใช้ค่า Velocity ที่กรองมาแล้ว)
-    odom0: /odometry/filtered
-    # ในโหมด Global ปกติเราใช้ Position แต่ถ้าเราปิด GPS การใช้ Velocity ก็ปลอดภัยกว่าสำหรับการเทส
-    odom0_config: [false, false, false,  
+    # Inputs เหมือน Local (Odom + IMU)
+    odom0: /odom
+    odom0_config: [false, false, false,
                    false, false, false,
-                   true,  true,  false,  # ใช้ vx, vy
-                   false, false, true,   # ใช้ v_yaw
+                   true,  true,  false,
+                   false, false, true,
                    false, false, false]
-    odom0_queue_size: 5
-
-    # --- [แก้จุดที่ 2] ปิด GPS ชั่วคราว ---
-    # gps0: /gps/filtered
-    # gps0_config: [true, true, false,
-    #               false, false, false,
-    #               false, false, false,
-    #               false, false, false,
-    #               false, false, false]
-    # gps0_queue_size: 5
+    odom0_queue_size: 10
 
     imu0: /imu
     imu0_config: [false, false, false,
+                  true,  true,  true,
                   false, false, false,
-                  false, false, false,
-                  false, false, true,
-                  false, false, false]
-    imu0_queue_size: 5
+                  true,  true,  true,
+                  true,  true,  true]
+    imu0_remove_gravitational_acceleration: true
+
+    # GPS Input (จาก Navsat Transform)
+    odom1: /odometry/gps
+    odom1_config: [true,  true,  false,
+                   false, false, false,
+                   false, false, false,
+                   false, false, false,
+                   false, false, false]
+    odom1_queue_size: 10
+    odom1_differential: false

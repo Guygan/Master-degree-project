@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import LaserScan
-from std_msgs.msg import Bool  # <-- ✨ 1. Import Bool
+from std_msgs.msg import Bool 
 import math
 import numpy as np
 
@@ -16,7 +16,7 @@ class LaserToSonarNode(Node):
 
         # --- ✨ 2. เพิ่ม Parameters ---
         # ระยะ STOP (เมตร) - คุณสามารถเปลี่ยนได้จากไฟล์ Launch
-        self.declare_parameter('stop_distance', 0.55) 
+        self.declare_parameter('stop_distance', 0.75) 
         # องศาที่จะตรวจสอบ (เช่น 30 องศา คือ +/- 15)
         self.declare_parameter('angle_range_degrees', 45.0) 
 

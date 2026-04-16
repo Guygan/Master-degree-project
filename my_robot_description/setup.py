@@ -21,7 +21,7 @@ setup(
         (os.path.join('share', package_name, 'config'), glob('config/*.config')),
         (os.path.join('share', package_name, 'config'), glob('config/*.mvc')),
         (os.path.join('share', package_name, 'maps'), glob('maps/*')),
-        (os.path.join('share', package_name, 'worlds'), glob('worlds/*')),
+        (os.path.join('share', package_name, 'worlds'), glob('worlds/*.sdf')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -42,6 +42,7 @@ setup(
             'waypoint_recorder = my_robot_description.waypoint_recorder:main',
             'farm_waypoint_navigator = my_robot_description.farm_waypoint_navigator:main',
             'go_to_checkpoint_node = my_robot_description.go_to_checkpoint_node:main',
+            'experiment_runner = my_robot_description.experiment_runner:main',
         ],
     },
 )

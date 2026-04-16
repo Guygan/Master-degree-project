@@ -1,9 +1,10 @@
+#navsat_transform_params.yaml
 navsat_transform_node:
   ros__parameters:
     use_sim_time: true
     gps_topic: "/gps/fix"
     imu_topic: "/imu"
-    odom_topic: "/odometry/filtered"
+    odom_topic: "/odometry/global"
     world_frame: "map"
     base_link_frame: "base_footprint"
     orientation_frame: "base_footprint"

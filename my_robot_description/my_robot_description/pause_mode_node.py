@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# pause_mode_node.py (ฉบับแก้ไข: V-Real - "ผู้เชี่ยวชาญด้าน 'Wait'")
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String

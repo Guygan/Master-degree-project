@@ -69,7 +69,7 @@ def generate_launch_description():
     # Node สำหรับแปลง LaserScan เป็น Range (Sonar)
     laser_to_sonar_node = Node(
         package='my_robot_description', # ระบุว่า Node นี้อยู่ในแพ็กเกจ my_robot_description
-        executable='laser_to_sonar', # ชื่อ executable ที่กำหนดใน setup.py
+        executable='laser_to_sonar_node', # ชื่อ executable ที่กำหนดใน setup.py
         name='laser_to_sonar_node',
         output='screen',
         # สามารถส่งพารามิเตอร์ให้กับ Node ได้ที่นี่

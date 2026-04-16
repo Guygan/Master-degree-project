@@ -22,18 +22,18 @@ def generate_launch_description():
     urdf_path = os.path.join(pkg_dir, 'urdf', 'my_robot.urdf.xacro')
     bridge_config_path = os.path.join(pkg_dir, 'config', 'gz_bridge.yaml')
     rviz_config_path = os.path.join(pkg_dir, 'rviz', 'my_nav2_view.rviz')
-    ekf_config_path = os.path.join(pkg_dir, 'config', 'ekf.yaml')
-    nav2_params_path = os.path.join(pkg_dir, 'config', 'nav2_params.yaml')
+    ekf_config_path = os.path.join(pkg_dir, 'config', 'ekf_test.yaml')
+    nav2_params_path = os.path.join(pkg_dir, 'config', 'nav2_params_test.yaml')
 
     # --- Launch Arguments ---
     declare_world_arg = DeclareLaunchArgument(
         'world',
-        default_value=os.path.join(pkg_dir, 'worlds', 'test2.sdf'),
+        default_value=os.path.join(pkg_dir, 'worlds', 'farm2_generated.sdf'),
         description='Full path to the world file to load'
     )
     declare_map_arg = DeclareLaunchArgument(
         'map',
-        default_value=os.path.join(pkg_dir, 'maps', 'test2.yaml'),
+        default_value=os.path.join(pkg_dir, 'maps', 'farm2.yaml'),
         description='Full path to map file'
     )
     declare_use_sim_time_cmd = DeclareLaunchArgument(
@@ -57,7 +57,7 @@ def generate_launch_description():
                 FindPackageShare('ros_gz_sim'), 'launch', 'gz_sim.launch.py'
             ])
         ]),
-        launch_arguments={'gz_args': ['-r ', world]}.items() 
+        launch_arguments={'gz_args': ['-s -r ', world]}.items() 
     )
 
     # --- Core Robot Nodes ---

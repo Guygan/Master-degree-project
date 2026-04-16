@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# go_to_checkpoint_node.py - FINAL VERSION
-# รองรับ HELP ME! ระหว่าง Maneuver + ระหว่าง Nav2
 
 import rclpy
 from rclpy.node import Node

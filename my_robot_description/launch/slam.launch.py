@@ -11,7 +11,6 @@ from launch_ros.substitutions import FindPackageShare
 from launch.actions import IncludeLaunchDescription
 from launch_ros.parameter_descriptions import ParameterValue
 
-
 def generate_launch_description():
     my_robot_pkg_dir = get_package_share_directory('my_robot_description')
     
@@ -20,6 +19,9 @@ def generate_launch_description():
     rviz_config_path = os.path.join(my_robot_pkg_dir, 'rviz', 'slam_view.rviz')
     ekf_config_path = os.path.join(my_robot_pkg_dir, 'config', 'ekf.yaml')
     slam_params_path = os.path.join(my_robot_pkg_dir, 'config', 'slam_params.yaml')
+    
+    # ✅ 1. เพิ่มบรรทัดนี้เพื่อชี้ไปที่ไฟล์โลกจำลอง
+    world_path = os.path.join(my_robot_pkg_dir, 'worlds', 'test1.sdf')
 
     # ใช้ simulation time (จาก Gazebo)
     use_sim_time_arg = DeclareLaunchArgument(
@@ -28,7 +30,6 @@ def generate_launch_description():
         description='Use simulation (Gazebo) clock if true'
     )
 
-    # ✅ Wrap ด้วย ParameterValue เพื่อแก้ error "Unable to parse"
     robot_description_content = ParameterValue(
         Command(['xacro ', urdf_path]),
         value_type=str
@@ -41,7 +42,8 @@ def generate_launch_description():
                 FindPackageShare('ros_gz_sim'), 'launch', 'gz_sim.launch.py'
             ])
         ]),
-        launch_arguments={'gz_args': '-r empty.sdf'}.items()
+        # ✅ 2. แก้ไข gz_args ให้รันไฟล์ world_path ตามตัวแปรที่เราประกาศไว้
+        launch_arguments={'gz_args': ['-r ', world_path]}.items()
     )
 
     # Robot state publisher
@@ -109,7 +111,7 @@ def generate_launch_description():
         parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
 
-    # ✅ Slam toolbox (ใช้ IncludeLaunchDescription เรียก online_async_launch.py โดยตรง)
+    # Slam toolbox
     start_slam_toolbox = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             PathJoinSubstitution([
@@ -122,7 +124,7 @@ def generate_launch_description():
         }.items()
     )
 
-    # Delay หลัง spawn robot เพื่อให้ odom/scan เริ่มก่อน แล้วค่อยรัน slam_toolbox
+    # Delay
     delay_nodes_after_spawn_handler = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=spawn_robot_node,
