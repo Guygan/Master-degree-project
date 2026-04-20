@@ -1,6 +1,5 @@
 # In file: launch/robot_localization.launch.py
 
-
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -29,12 +28,12 @@ def generate_launch_description():
     # --- Launch Arguments ---
     declare_world_arg = DeclareLaunchArgument(
         'world',
-        default_value=os.path.join(pkg_dir, 'worlds', 'test1.sdf'),
+        default_value=os.path.join(pkg_dir, 'worlds', 'test2.sdf'),
         description='Full path to the world file to load'
     )
     declare_map_arg = DeclareLaunchArgument(
         'map',
-        default_value=os.path.join(pkg_dir, 'maps', 'test1.yaml'),
+        default_value=os.path.join(pkg_dir, 'maps', 'test2.yaml'),
         description='Full path to map file'
     )
     declare_use_sim_time_cmd = DeclareLaunchArgument(
@@ -45,9 +44,6 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
     world = LaunchConfiguration('world')
     map_yaml_file = LaunchConfiguration('map')
-
-    # ใช้ dict แยกต่างหากสำหรับ node ที่ต้องการ bool จริงๆ ไม่ใช่ LaunchConfiguration string
-    sim_time_param = {'use_sim_time': True}
 
     robot_description_content = ParameterValue(
         Command(['xacro ', urdf_path]),
@@ -61,30 +57,38 @@ def generate_launch_description():
                 FindPackageShare('ros_gz_sim'), 'launch', 'gz_sim.launch.py'
             ])
         ]),
-        launch_arguments={'gz_args': ['-r ', world]}.items() 
+        launch_arguments={'gz_args': ['-r ', world]}.items()
     )
 
-    # --- Core Robot Nodes ---
+    # --- Nodes ---
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='screen',
         parameters=[{
             'use_sim_time': True,
-            'robot_description': robot_description_content
+            'robot_description': robot_description_content,
+            'publish_frequency': 50.0,
+            'ignore_timestamp': True,
         }]
+    )
+
+    joint_state_publisher_node = Node(
+        package='joint_state_publisher',
+        executable='joint_state_publisher',
+        name='joint_state_publisher',
+        output='screen',
+        parameters=[{'use_sim_time': True}]
     )
 
     spawn_robot_node = Node(
         package='ros_gz_sim',
         executable='create',
         arguments=['-topic', 'robot_description', '-name', 'my_robot',
-                   '-x', '0.0', '-y', '0.0', '-z', '0.1', '-Y', '0.0'
-                   ],
+                   '-x', '0.0', '-y', '0.0', '-z', '0.1', '-Y', '0.0'],
         output='screen'
     )
 
-    # --- Bridge, EKF, Frame Fixer Nodes ---
     gz_ros_bridge_node = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
@@ -108,7 +112,7 @@ def generate_launch_description():
         output='screen',
         parameters=[{'use_sim_time': True}]
     )
-    # โหนด "สมอง" ตัวใหม่
+
     stuck_manager_node = Node(
         package='my_robot_description',
         executable='stuck_manager_node',
@@ -126,31 +130,35 @@ def generate_launch_description():
         emulate_tty=True,
         parameters=[{'use_sim_time': True}]
     )
-    
+
     pause_mode_node = Node(
         package='my_robot_description',
         executable='pause_mode_node',
         name='pause_mode_node',
         output='screen',
         emulate_tty=True,
+        parameters=[{'use_sim_time': True}]
     )
+
     return_to_home_node = Node(
         package='my_robot_description',
         executable='return_to_home_node',
         name='return_to_home_node',
         output='screen',
         emulate_tty=True,
+        parameters=[{'use_sim_time': True}]
     )
-    
+
     go_to_checkpoint_node = Node(
         package='my_robot_description',
         executable='go_to_checkpoint_node',
         name='go_to_checkpoint_node',
         output='screen',
         emulate_tty=True,
+        parameters=[{'use_sim_time': True}]
     )
 
-    goal_monitor_node = Node( 
+    goal_monitor_node = Node(
         package='my_robot_description',
         executable='goal_monitor_node',
         name='goal_monitor_node',
@@ -183,7 +191,7 @@ def generate_launch_description():
             'launch_docking_server': 'true',
             'launch_smoother_server': 'true',
             'launch_waypoint_follower': 'true'
-        }.items() 
+        }.items()
     )
 
     # --- RViz ---
@@ -196,33 +204,89 @@ def generate_launch_description():
         parameters=[{'use_sim_time': True}]
     )
 
-    # --- ลำดับการรัน ---
-    start_bridge_handler = TimerAction(period=2.0, actions=[
-        LogInfo(msg='Gazebo ready, starting Bridge...'),
-        gz_ros_bridge_node,
-        TimerAction(period=1.0, actions=[
-             LogInfo(msg='Bridge ready, starting EKF & Frame Fixer...'),
-             robot_localization_node,
-             frame_fixer_node,
-        ])
-    ])
+    # =====================================================================
+    # ลำดับการรัน:
+    #
+    #   t=0s    → Gazebo เริ่ม
+    #   t=2.0s  → Bridge เริ่ม  ← forward /clock มา ROS2
+    #   t=2.0s  → wait_for_clock เริ่ม (อยู่ใน TimerAction เดียวกับ Bridge)
+    #             รอจนกว่า /joint_states จะมี timestamp > sec=0
+    #   joint_states OK → JSP + RSP เริ่ม
+    #   t+2.0s  → spawn robot
+    #   t+2.0s  → EKF + frame_fixer
+    #   EKF start → Nav2, RViz, helper nodes
+    #
+    # KEY FIX: wait_for_clock อยู่ใน TimerAction เดียวกับ Bridge
+    #          ทำให้แน่ใจว่า Bridge รันก่อน wait_for_clock เสมอ
+    # =====================================================================
 
+    # script รอ /joint_states มี timestamp > sec=0
+    # (รับประกันว่า Bridge forward clock มาแล้ว และ JSP sync แล้ว)
+    wait_for_joint_states = ExecuteProcess(
+        cmd=['bash', '-c',
+             'source /opt/ros/humble/setup.bash && '
+             'source ~/ros2_ws/install/setup.bash && '
+             'echo "[TIMING] Waiting for /joint_states timestamp > sec=0..." && '
+             'until [ "$(ros2 topic echo /joint_states --once 2>/dev/null '
+             '| grep "sec:" | grep -v "sec: 0")" != "" ]; '
+             'do sleep 0.2; done && '
+             'echo "[TIMING] /joint_states OK! Safe to start RSP"'
+             ],
+        output='screen'
+    )
+
+    # เมื่อ joint_states พร้อม → RSP เริ่ม → spawn → EKF
+    start_rsp_after_joints = RegisterEventHandler(
+        OnProcessExit(
+            target_action=wait_for_joint_states,
+            on_exit=[
+                LogInfo(msg='[TIMING] joint_states ready! Starting RSP...'),
+                robot_state_publisher_node,
+                TimerAction(
+                    period=2.0,
+                    actions=[
+                        LogInfo(msg='[TIMING] RSP ready, spawning robot...'),
+                        spawn_robot_node,
+                        TimerAction(
+                            period=2.0,
+                            actions=[
+                                LogInfo(msg='[TIMING] Robot spawned, starting EKF & Frame Fixer...'),
+                                robot_localization_node,
+                                frame_fixer_node,
+                            ]
+                        )
+                    ]
+                )
+            ]
+        )
+    )
+
+    # Bridge + JSP + wait_for_joint_states เริ่มพร้อมกันหลัง Gazebo พร้อม
+    # JSP ต้องเริ่มก่อน wait_for_joint_states จะรอได้
+    start_after_gazebo = TimerAction(
+        period=2.0,
+        actions=[
+            LogInfo(msg='[TIMING] Gazebo ready, starting Bridge + JSP + wait_for_joint_states...'),
+            gz_ros_bridge_node,
+            joint_state_publisher_node,  # JSP เริ่มพร้อม Bridge
+            wait_for_joint_states,       # รอ JSP sync กับ clock ก่อน
+        ]
+    )
+
+    # เมื่อ EKF เริ่ม → Nav2, RViz, helper nodes
     start_nav2_rviz_handler = RegisterEventHandler(
         OnProcessStart(
             target_action=robot_localization_node,
             on_start=[
-                LogInfo(msg='EKF started, starting Nav2, RViz, and ALL Helper Nodes...'),
-                start_nav2, 
+                LogInfo(msg='[TIMING] EKF started! Starting Nav2, RViz, and ALL Helper Nodes...'),
+                start_nav2,
                 rviz_node,
-                
-                stuck_manager_node,                
-                stuck_ui_node,                    
-                
-                goal_monitor_node, 
+                stuck_manager_node,
+                stuck_ui_node,
+                goal_monitor_node,
                 laser_to_sonar_node,
                 pause_mode_node,
                 return_to_home_node,
-                
                 go_to_checkpoint_node
             ]
         )
@@ -233,8 +297,7 @@ def generate_launch_description():
         declare_map_arg,
         declare_use_sim_time_cmd,
         start_gazebo_cmd,
-        robot_state_publisher_node,
-        spawn_robot_node,
-        start_bridge_handler,
-        start_nav2_rviz_handler
+        start_after_gazebo,        # Bridge + JSP + wait หลัง Gazebo 2s
+        start_rsp_after_joints,    # RSP + spawn + EKF หลัง joint_states พร้อม
+        start_nav2_rviz_handler    # Nav2 + RViz หลัง EKF
     ])

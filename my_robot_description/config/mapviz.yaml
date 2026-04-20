@@ -1,7 +1,7 @@
 initialize_origin:
   ros__parameters:
     local_xy_frame: "map"
-    local_xy_origin: "my_farm"  # ชื่อต้องตรงกับ name ด้านล่าง
+    local_xy_origin: "my_farm"  
     local_xy_origins:
       - name: "my_farm"
         latitude: 15.772145

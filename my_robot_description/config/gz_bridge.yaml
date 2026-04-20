@@ -23,18 +23,10 @@
   gz_type_name: "gz.msgs.Odometry"
   direction: GZ_TO_ROS
 
-# ✨ === 1. เพิ่ม IMU BRIDGE (แก้หุ่นหมุน) === ✨
 - ros_topic_name: "/imu"
   gz_topic_name: "/imu"
   ros_type_name: "sensor_msgs/msg/Imu"
   gz_type_name: "gz.msgs.IMU"
-  direction: GZ_TO_ROS
-
-# ✨ === 2. แก้ไข JOINT_STATES BRIDGE === ✨
-- ros_topic_name: "/joint_states"
-  gz_topic_name: "/joint_states"  
-  ros_type_name: "sensor_msgs/msg/JointState"
-  gz_type_name: "gz.msgs.Model"
   direction: GZ_TO_ROS
 
 - ros_topic_name: "cmd_vel"
@@ -43,11 +35,6 @@
   gz_type_name: "gz.msgs.Twist"
   direction: ROS_TO_GZ
 
-- ros_topic_name: "/gps/fix"
-  gz_topic_name: "/gps/fix"
-  ros_type_name: "sensor_msgs/msg/NavSatFix"
-  gz_type_name: "gz.msgs.NavSat"
-  direction: GZ_TO_ROS
 
 
   

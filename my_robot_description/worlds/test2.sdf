@@ -1,9 +1,6 @@
 <sdf version='1.10'>
   <world name='default'>
     <gui fullscreen='false'>
-      <plugin name='gz::sim::systems::LidarSensor' filename='gz-sim-lidar-sensor-system'>
-        <topic>/scan</topic>
-      </plugin>
     </gui>
     <gravity>0 0 -9.8000000000000007</gravity>
     <magnetic_field>5.5644999999999998e-06 2.2875799999999999e-05 -4.2388400000000002e-05</magnetic_field>
