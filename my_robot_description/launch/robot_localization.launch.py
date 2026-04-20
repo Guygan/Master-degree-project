@@ -10,6 +10,7 @@ from launch.actions import (
 from launch.event_handlers import OnProcessExit, OnProcessStart
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
+from launch.conditions import IfCondition
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
@@ -23,17 +24,17 @@ def generate_launch_description():
     bridge_config_path = os.path.join(pkg_dir, 'config', 'gz_bridge.yaml')
     rviz_config_path = os.path.join(pkg_dir, 'rviz', 'my_nav2_view.rviz')
     ekf_config_path = os.path.join(pkg_dir, 'config', 'ekf.yaml')
-    nav2_params_path = os.path.join(pkg_dir, 'config', 'nav2_params.yaml')
+    nav2_params_path = os.path.join(pkg_dir, 'config', 'Smac_MPPI.yaml')
 
     # --- Launch Arguments ---
     declare_world_arg = DeclareLaunchArgument(
         'world',
-        default_value=os.path.join(pkg_dir, 'worlds', 'test2.sdf'),
+        default_value=os.path.join(pkg_dir, 'worlds', 'test1.sdf'),
         description='Full path to the world file to load'
     )
     declare_map_arg = DeclareLaunchArgument(
         'map',
-        default_value=os.path.join(pkg_dir, 'maps', 'test2.yaml'),
+        default_value=os.path.join(pkg_dir, 'maps', 'test1.yaml'),
         description='Full path to map file'
     )
     declare_use_sim_time_cmd = DeclareLaunchArgument(
@@ -44,6 +45,9 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
     world = LaunchConfiguration('world')
     map_yaml_file = LaunchConfiguration('map')
+
+    # ใช้ dict แยกต่างหากสำหรับ node ที่ต้องการ bool จริงๆ ไม่ใช่ LaunchConfiguration string
+    sim_time_param = {'use_sim_time': True}
 
     robot_description_content = ParameterValue(
         Command(['xacro ', urdf_path]),
@@ -66,7 +70,7 @@ def generate_launch_description():
         executable='robot_state_publisher',
         output='screen',
         parameters=[{
-            'use_sim_time': use_sim_time,
+            'use_sim_time': True,
             'robot_description': robot_description_content
         }]
     )
@@ -85,7 +89,7 @@ def generate_launch_description():
         package='ros_gz_bridge',
         executable='parameter_bridge',
         name='gz_ros_bridge',
-        parameters=[{'config_file': bridge_config_path, 'use_sim_time': use_sim_time}],
+        parameters=[{'config_file': bridge_config_path, 'use_sim_time': True}],
         output='screen'
     )
 
@@ -94,7 +98,7 @@ def generate_launch_description():
         executable='ekf_node',
         name='ekf_filter_node',
         output='screen',
-        parameters=[ekf_config_path, {'use_sim_time': use_sim_time}]
+        parameters=[ekf_config_path, {'use_sim_time': True}]
     )
 
     frame_fixer_node = Node(
@@ -102,7 +106,7 @@ def generate_launch_description():
         executable='frame_fixer',
         name='scan_frame_fixer',
         output='screen',
-        parameters=[{'use_sim_time': use_sim_time}]
+        parameters=[{'use_sim_time': True}]
     )
     # โหนด "สมอง" ตัวใหม่
     stuck_manager_node = Node(
@@ -110,18 +114,17 @@ def generate_launch_description():
         executable='stuck_manager_node',
         name='stuck_manager_node',
         output='screen',
-        emulate_tty=True, # (เผื่อไว้)
-        parameters=[{'use_sim_time': use_sim_time}]
+        emulate_tty=True,
+        parameters=[{'use_sim_time': True}]
     )
 
-    # โหนด "UI" ตัวใหม่
     stuck_ui_node = Node(
         package='my_robot_description',
         executable='stuck_ui_node',
         name='stuck_ui_node',
         output='screen',
-        emulate_tty=True, # (สำคัญสำหรับ Zenity)
-        parameters=[{'use_sim_time': use_sim_time}]
+        emulate_tty=True,
+        parameters=[{'use_sim_time': True}]
     )
     
     pause_mode_node = Node(
@@ -153,7 +156,7 @@ def generate_launch_description():
         name='goal_monitor_node',
         output='screen',
         emulate_tty=True,
-        parameters=[{'use_sim_time': use_sim_time}]
+        parameters=[{'use_sim_time': True}]
     )
 
     laser_to_sonar_node = Node(
@@ -162,7 +165,7 @@ def generate_launch_description():
         name='laser_to_sonar_node',
         output='screen',
         emulate_tty=True,
-        parameters=[{'use_sim_time': use_sim_time}]
+        parameters=[{'use_sim_time': True}]
     )
 
     # --- Nav2 Stack ---
@@ -190,7 +193,7 @@ def generate_launch_description():
         name='rviz2',
         output='screen',
         arguments=['-d', rviz_config_path],
-        parameters=[{'use_sim_time': use_sim_time}]
+        parameters=[{'use_sim_time': True}]
     )
 
     # --- ลำดับการรัน ---
