@@ -43,6 +43,7 @@ setup(
             'farm_waypoint_navigator = my_robot_description.farm_waypoint_navigator:main',
             'go_to_checkpoint_node = my_robot_description.go_to_checkpoint_node:main',
             'experiment_runner = my_robot_description.experiment_runner:main',
+            'path_recorder_node = my_robot_description.path_recorder_node:main',
         ],
     },
 )

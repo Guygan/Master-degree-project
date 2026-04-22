@@ -25,7 +25,7 @@ class StuckManagerNode(Node):
         # =========================================
         # ถ้าความเร็วต่ำกว่า 0.02 m/s นานเกิน 10 วิ --> ถือว่าติดหล่ม
         self.declare_parameter('stagnation_velocity_threshold', 0.02)
-        self.declare_parameter('stagnation_timeout_sec', 10.0)
+        self.declare_parameter('stagnation_timeout_sec', 30.0)
 
         self.min_vel_thresh = self.get_parameter('stagnation_velocity_threshold').value
         self.stuck_timeout = self.get_parameter('stagnation_timeout_sec').value
@@ -142,17 +142,30 @@ class StuckManagerNode(Node):
                 pass
 
     def nav_goal_status_callback(self, msg: GoalStatusArray):
-        # เช็คว่ามี Goal ที่กำลังวิ่งอยู่ไหม
         is_running = False
+        new_goal_id = None
+
+        # รอบแรก: หา Goal ที่กำลัง EXECUTING/ACCEPTED อยู่
         for status in msg.status_list:
             if status.status in (GoalStatus.STATUS_EXECUTING, GoalStatus.STATUS_ACCEPTED):
                 is_running = True
-                self.current_goal_id = status.goal_info.goal_id
-            
+                new_goal_id = status.goal_info.goal_id
+
+        # อัปเดต current_goal_id ก่อนเช็ค ABORTED
+        if new_goal_id is not None:
+            self.current_goal_id = new_goal_id
+
+        # รอบสอง: เช็ค ABORTED เฉพาะ Goal ที่เป็น current เท่านั้น
+        for status in msg.status_list:
             if status.status == GoalStatus.STATUS_ABORTED:
-                self.fire_ui_trigger(f"NAV2_ABORTED")
+                # ถ้ามี Goal ใหม่วิ่งอยู่แล้ว = Goal เก่าถูก preempt → ไม่ใช่ปัญหา
+                if is_running:
+                    self.get_logger().debug('Goal preempted by new goal, ignoring ABORTED.')
+                    break
+                # ถ้าไม่มี Goal ใหม่ = ABORTED จริงๆ
+                self.fire_ui_trigger("NAV2_ABORTED")
                 break
-        
+
         self.is_nav_active = is_running
 
     def ui_decision_callback(self, msg: String):

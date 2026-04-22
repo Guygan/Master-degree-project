@@ -176,6 +176,19 @@ def generate_launch_description():
         parameters=[{'use_sim_time': True}]
     )
 
+    path_recorder_node = Node(
+        package='my_robot_description',
+        executable='path_recorder_node',
+        name='path_recorder_node',
+        output='screen',
+        emulate_tty=True,
+        parameters=[{
+            'use_sim_time': True,
+            'map_yaml_path': os.path.join(pkg_dir, 'maps', 'test2.yaml'),
+            'output_dir': os.path.expanduser('~/robot_paths'),
+        }]
+    )
+
     # --- Nav2 Stack ---
     start_nav2 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -205,75 +218,69 @@ def generate_launch_description():
     )
 
     # =====================================================================
-    # ลำดับการรัน:
+    # FIX: RSP ต้องเริ่มพร้อม Bridge และ JSP
     #
-    #   t=0s    → Gazebo เริ่ม
-    #   t=2.0s  → Bridge เริ่ม  ← forward /clock มา ROS2
-    #   t=2.0s  → wait_for_clock เริ่ม (อยู่ใน TimerAction เดียวกับ Bridge)
-    #             รอจนกว่า /joint_states จะมี timestamp > sec=0
-    #   joint_states OK → JSP + RSP เริ่ม
-    #   t+2.0s  → spawn robot
-    #   t+2.0s  → EKF + frame_fixer
-    #   EKF start → Nav2, RViz, helper nodes
+    # ปัญหาเดิม (Deadlock):
+    #   JSP รอ robot_description  ←→  RSP รอ joint_states  ← วนไม่จบ!
     #
-    # KEY FIX: wait_for_clock อยู่ใน TimerAction เดียวกับ Bridge
-    #          ทำให้แน่ใจว่า Bridge รันก่อน wait_for_clock เสมอ
+    # ลำดับที่ถูกต้อง:
+    #   t=0s   → Gazebo เริ่ม
+    #   t=2s   → Bridge + RSP + JSP เริ่มพร้อมกัน
+    #              RSP publish robot_description ทันที  ← JSP หลุดจาก deadlock
+    #              Bridge forward /clock มา ROS2
+    #   t=2s   → wait_for_clock รอ /joint_states มี timestamp > sec=0
+    #   OK     → spawn robot
+    #   t+2s   → EKF + frame_fixer
+    #   EKF    → Nav2, RViz, helper nodes ทั้งหมด
     # =====================================================================
 
-    # script รอ /joint_states มี timestamp > sec=0
-    # (รับประกันว่า Bridge forward clock มาแล้ว และ JSP sync แล้ว)
+    # รอ /joint_states มี timestamp > sec=0 (clock sync แล้ว)
     wait_for_joint_states = ExecuteProcess(
         cmd=['bash', '-c',
-             'source /opt/ros/humble/setup.bash && '
+             'source /opt/ros/jazzy/setup.bash && '
              'source ~/ros2_ws/install/setup.bash && '
              'echo "[TIMING] Waiting for /joint_states timestamp > sec=0..." && '
              'until [ "$(ros2 topic echo /joint_states --once 2>/dev/null '
              '| grep "sec:" | grep -v "sec: 0")" != "" ]; '
              'do sleep 0.2; done && '
-             'echo "[TIMING] /joint_states OK! Safe to start RSP"'
+             'echo "[TIMING] /joint_states OK! Safe to spawn robot"'
              ],
         output='screen'
     )
 
-    # เมื่อ joint_states พร้อม → RSP เริ่ม → spawn → EKF
-    start_rsp_after_joints = RegisterEventHandler(
+    # เมื่อ joint_states พร้อม → spawn → EKF
+    start_spawn_after_joints = RegisterEventHandler(
         OnProcessExit(
             target_action=wait_for_joint_states,
             on_exit=[
-                LogInfo(msg='[TIMING] joint_states ready! Starting RSP...'),
-                robot_state_publisher_node,
+                LogInfo(msg='[TIMING] joint_states ready! Spawning robot...'),
+                spawn_robot_node,
                 TimerAction(
                     period=2.0,
                     actions=[
-                        LogInfo(msg='[TIMING] RSP ready, spawning robot...'),
-                        spawn_robot_node,
-                        TimerAction(
-                            period=2.0,
-                            actions=[
-                                LogInfo(msg='[TIMING] Robot spawned, starting EKF & Frame Fixer...'),
-                                robot_localization_node,
-                                frame_fixer_node,
-                            ]
-                        )
+                        LogInfo(msg='[TIMING] Robot spawned, starting EKF & Frame Fixer...'),
+                        robot_localization_node,
+                        frame_fixer_node,
                     ]
                 )
             ]
         )
     )
 
-    # Bridge + JSP + wait_for_joint_states เริ่มพร้อมกันหลัง Gazebo พร้อม
-    # JSP ต้องเริ่มก่อน wait_for_joint_states จะรอได้
+    # Bridge + RSP + JSP เริ่มพร้อมกันหลัง Gazebo 2s
+    # RSP ต้องอยู่ในกลุ่มนี้เพื่อ publish robot_description ให้ JSP
     start_after_gazebo = TimerAction(
         period=2.0,
         actions=[
-            LogInfo(msg='[TIMING] Gazebo ready, starting Bridge + JSP + wait_for_joint_states...'),
+            LogInfo(msg='[TIMING] Gazebo ready, starting Bridge + RSP + JSP + wait_for_clock...'),
             gz_ros_bridge_node,
-            joint_state_publisher_node,  # JSP เริ่มพร้อม Bridge
-            wait_for_joint_states,       # รอ JSP sync กับ clock ก่อน
+            robot_state_publisher_node,  # ← ย้ายมาอยู่ที่นี่ (FIX)
+            joint_state_publisher_node,
+            wait_for_joint_states,
         ]
     )
 
-    # เมื่อ EKF เริ่ม → Nav2, RViz, helper nodes
+    # เมื่อ EKF เริ่ม → Nav2, RViz, helper nodes ทั้งหมด
     start_nav2_rviz_handler = RegisterEventHandler(
         OnProcessStart(
             target_action=robot_localization_node,
@@ -287,7 +294,8 @@ def generate_launch_description():
                 laser_to_sonar_node,
                 pause_mode_node,
                 return_to_home_node,
-                go_to_checkpoint_node
+                go_to_checkpoint_node,
+                path_recorder_node,
             ]
         )
     )
@@ -297,7 +305,7 @@ def generate_launch_description():
         declare_map_arg,
         declare_use_sim_time_cmd,
         start_gazebo_cmd,
-        start_after_gazebo,        # Bridge + JSP + wait หลัง Gazebo 2s
-        start_rsp_after_joints,    # RSP + spawn + EKF หลัง joint_states พร้อม
-        start_nav2_rviz_handler    # Nav2 + RViz หลัง EKF
+        start_after_gazebo,         # Bridge + RSP + JSP + wait หลัง Gazebo 2s
+        start_spawn_after_joints,   # spawn + EKF หลัง joint_states พร้อม
+        start_nav2_rviz_handler,    # Nav2 + RViz + helpers หลัง EKF
     ])
