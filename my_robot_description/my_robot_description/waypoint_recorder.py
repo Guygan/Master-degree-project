@@ -11,7 +11,7 @@ from ament_index_python.packages import get_package_share_directory
 
 # --- Path ไฟล์ภารกิจ ---
 # (ใช้ Path src/ ของคุณเหมือนเดิม เพื่อความชัวร์)
-MISSION_FILE = '/home/guygan/ros2_ws/src/my_robot_description/config/farm_mission.yaml'
+MISSION_FILE = '/home/guygan/ros2_ws/src/my_robot_description/config/waypoint_position.yaml'
 
 class WaypointRecorderNode(Node):
     def __init__(self):

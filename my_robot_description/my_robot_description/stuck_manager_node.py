@@ -11,7 +11,7 @@ from rclpy.time import Time
 from action_msgs.msg import GoalStatusArray, GoalStatus
 from action_msgs.srv import CancelGoal
 from std_msgs.msg import String, Bool
-from nav_msgs.msg import Odometry  # <--- [NEW] ต้องใช้ Odom เช็คความเร็ว
+from nav_msgs.msg import Odometry
 
 class StuckManagerNode(Node):
     def __init__(self):
@@ -21,14 +21,13 @@ class StuckManagerNode(Node):
         self.callback_group = ReentrantCallbackGroup()
 
         # =========================================
-        # ⚙️ PARAMETERS (จากที่คำนวณมา)
+        # ⚙️ PARAMETERS
         # =========================================
-        # ถ้าความเร็วต่ำกว่า 0.02 m/s นานเกิน 10 วิ --> ถือว่าติดหล่ม
         self.declare_parameter('stagnation_velocity_threshold', 0.02)
         self.declare_parameter('stagnation_timeout_sec', 30.0)
 
         self.min_vel_thresh = self.get_parameter('stagnation_velocity_threshold').value
-        self.stuck_timeout = self.get_parameter('stagnation_timeout_sec').value
+        self.stuck_timeout  = self.get_parameter('stagnation_timeout_sec').value
 
         # =========================================
         # 📡 SUBSCRIBERS
@@ -36,172 +35,189 @@ class StuckManagerNode(Node):
         self.goal_status_sub = self.create_subscription(
             GoalStatusArray, '/navigate_to_pose/_action/status',
             self.nav_goal_status_callback, 10, callback_group=self.callback_group)
-            
-        self.sonar_stop_sub = self.create_subscription(
-            Bool, '/sonar_stop_trigger', self.sonar_stop_callback, 10, callback_group=self.callback_group)
-            
-        self.ui_decision_sub = self.create_subscription(
-            String, '/ui_decision', self.ui_decision_callback, 10, callback_group=self.callback_group)
-            
-        self.specialist_result_sub = self.create_subscription(
-            String, '/specialist/result', self.specialist_result_callback, 10, callback_group=self.callback_group)
 
-        # [NEW] รับค่า Odom เพื่อดูความเร็ว
+        self.sonar_stop_sub = self.create_subscription(
+            Bool, '/sonar_stop_trigger', self.sonar_stop_callback, 10,
+            callback_group=self.callback_group)
+
+        self.ui_decision_sub = self.create_subscription(
+            String, '/ui_decision', self.ui_decision_callback, 10,
+            callback_group=self.callback_group)
+
+        self.specialist_result_sub = self.create_subscription(
+            String, '/specialist/result', self.specialist_result_callback, 10,
+            callback_group=self.callback_group)
+
         self.odom_sub = self.create_subscription(
-            Odometry, '/odometry/global', self.odom_callback, 10, callback_group=self.callback_group)
+            Odometry, '/odometry/global', self.odom_callback, 10,
+            callback_group=self.callback_group)
 
         # =========================================
         # 📢 PUBLISHERS
         # =========================================
         self.ui_request_pub = self.create_publisher(String, '/request_ui_popup', 10)
-        self.ui_cancel_pub = self.create_publisher(Bool, '/cancel_ui_alert', 10)
-        
-        # Action Triggers
-        self.pause_pub = self.create_publisher(String, '/pause_mode/command', 10)
-        self.home_pub = self.create_publisher(String, '/return_to_home/command', 10)
-        self.checkpoint_pub = self.create_publisher(String, '/go_to_checkpoint/command', 10)
-        
-        self.sonar_ignore_pub = self.create_publisher(Bool, '/sonar_ignore', 10)
+        self.ui_cancel_pub  = self.create_publisher(Bool,   '/cancel_ui_alert',  10)
 
-        # Feedback Monitors
-        self.create_subscription(String, '/pause_mode/feedback', self.pause_feedback_cb, 10)
-        self.create_subscription(String, '/pause_mode/result', self.pause_result_cb, 10)
-        self.create_subscription(String, '/return_to_home/feedback', self.home_feedback_cb, 10)
-        self.create_subscription(String, '/return_to_home/result', self.home_result_cb, 10)
-        self.create_subscription(String, '/go_to_checkpoint/result', self.checkpoint_result_cb, 10)
+        self.pause_pub      = self.create_publisher(String, '/pause_mode/command',        10)
+        self.home_pub       = self.create_publisher(String, '/return_to_home/command',    10)
+        self.checkpoint_pub = self.create_publisher(String, '/go_to_checkpoint/command',  10)
+        self.sonar_ignore_pub = self.create_publisher(Bool, '/sonar_ignore',              10)
+
+        self.create_subscription(String, '/pause_mode/feedback',     self.pause_feedback_cb,     10)
+        self.create_subscription(String, '/pause_mode/result',       self.pause_result_cb,       10)
+        self.create_subscription(String, '/return_to_home/feedback', self.home_feedback_cb,      10)
+        self.create_subscription(String, '/return_to_home/result',   self.home_result_cb,        10)
+        self.create_subscription(String, '/go_to_checkpoint/result', self.checkpoint_result_cb,  10)
 
         # =========================================
         # 🛠 SERVICES & TIMERS
         # =========================================
         self.cancel_goal_client = self.create_client(
-            CancelGoal, '/navigate_to_pose/_action/cancel_goal', callback_group=self.callback_group)
+            CancelGoal, '/navigate_to_pose/_action/cancel_goal',
+            callback_group=self.callback_group)
 
-        # [NEW] Watchdog Timer (เช็คทุก 1 วินาที)
         self.create_timer(1.0, self.watchdog_timer_callback, callback_group=self.callback_group)
 
         # =========================================
         # 🚩 STATE VARIABLES
         # =========================================
-        self.is_ui_active = False
+        self.is_ui_active      = False
         self.is_ignoring_sonar = False
-        self.current_goal_id = None
-        self.is_nav_active = False # เช็คว่า Nav2 ทำงานอยู่ไหม
+        self.current_goal_id   = None
+        self.is_nav_active     = False
+
+        # ─── FIX: ติดตาม goal ที่เคยเห็น SUCCEEDED แล้ว ───────────────────
+        # เพื่อกรองออก goal เก่าที่มี status ABORTED หลังจาก preempt
+        # และป้องกันการ trigger UI ซ้ำจาก goal ที่จบไปแล้ว
+        self._succeeded_goal_ids = set()  # goal_id ที่ SUCCEEDED แล้ว
+        self._all_seen_goal_ids  = set()  # goal_id ทั้งหมดที่เคยเห็น
+        # ──────────────────────────────────────────────────────────────────
 
         # Stagnation Logic
         self.current_linear_vel = 0.0
-        self.last_moving_time = self.get_clock().now() # เวลาล่าสุดที่รถขยับ
+        self.last_moving_time   = self.get_clock().now()
 
-    # -------------------------
-    # [NEW] Watchdog Logic
-    # -------------------------
+    # ─────────────────────────── Watchdog ────────────────────────────
+
     def odom_callback(self, msg: Odometry):
-        # คำนวณความเร็วรวม v = sqrt(vx^2 + vy^2)
         vx = msg.twist.twist.linear.x
         vy = msg.twist.twist.linear.y
         self.current_linear_vel = math.sqrt(vx**2 + vy**2)
 
     def watchdog_timer_callback(self):
-        """ทำงานทุก 1 วินาที เพื่อเช็คว่าติดหล่มไหม"""
-        # 1. ถ้า UI เด้งอยู่แล้ว หรือ Nav2 ไม่ทำงาน -> ไม่ต้องเช็ค
         if self.is_ui_active or not self.is_nav_active:
-            self.last_moving_time = self.get_clock().now() # Reset เวลา
+            self.last_moving_time = self.get_clock().now()
             return
 
-        # 2. เช็คความเร็ว
         if self.current_linear_vel > self.min_vel_thresh:
-            # ถ้ารถขยับเกิน 0.02 m/s -> อัปเดตเวลาล่าสุดที่ขยับ
             self.last_moving_time = self.get_clock().now()
         else:
-            # ถ้ารถนิ่ง... เช็คว่านิ่งนานเกินกำหนดหรือยัง?
-            time_diff = self.get_clock().now() - self.last_moving_time
+            time_diff    = self.get_clock().now() - self.last_moving_time
             seconds_stuck = time_diff.nanoseconds / 1e9
-            
+
             if seconds_stuck > self.stuck_timeout:
-                self.get_logger().warn(f"🐢 Stagnation Detected! Vel: {self.current_linear_vel:.3f} for {seconds_stuck:.1f}s")
-                self.fire_ui_trigger(f"STUCK_DETECTED ({seconds_stuck:.1f}s)")
-                # Reset เวลาเพื่อไม่ให้ยิงรัวๆ
+                self.get_logger().warn(
+                    f'🐢 Stagnation Detected! Vel: {self.current_linear_vel:.3f} '
+                    f'for {seconds_stuck:.1f}s')
+                self.fire_ui_trigger(f'STUCK_DETECTED ({seconds_stuck:.1f}s)')
                 self.last_moving_time = self.get_clock().now()
 
-    # -------------------------
-    # Standard Callbacks
-    # -------------------------
+    # ─────────────────────────── Core callbacks ──────────────────────
+
     def fire_ui_trigger(self, reason: str):
         if self.is_ui_active or self.is_ignoring_sonar:
             return
         self.is_ui_active = True
-        self.get_logger().error(f"🚨 TRIGGERING UI: {reason}")
+        self.get_logger().error(f'🚨 TRIGGERING UI: {reason}')
         self.ui_request_pub.publish(String(data=reason))
 
     def sonar_stop_callback(self, msg: Bool):
         if msg.data:
-            self.fire_ui_trigger("VIRTUAL_BUMPER_STOP")
-        else:
-            if self.is_ui_active and not self.is_ignoring_sonar:
-                # ถ้าสิ่งกีดขวางหายไปเอง ให้เคลียร์ UI (Optional)
-                # self.ui_cancel_pub.publish(Bool(data=True)) 
-                pass
+            self.fire_ui_trigger('VIRTUAL_BUMPER_STOP')
 
     def nav_goal_status_callback(self, msg: GoalStatusArray):
-        is_running = False
-        new_goal_id = None
+        """
+        ตรรกะที่แก้ไขแล้ว:
 
-        # รอบแรก: หา Goal ที่กำลัง EXECUTING/ACCEPTED อยู่
+        1. สแกนหา goal ที่กำลัง EXECUTING/ACCEPTED อยู่ → is_nav_active
+        2. บันทึก goal ที่ SUCCEEDED ไว้ใน _succeeded_goal_ids
+        3. ABORTED → trigger UI เฉพาะเมื่อ:
+              a) ไม่มี goal ใหม่กำลังวิ่งอยู่ (ไม่ใช่ preempt)
+              b) goal นั้นไม่ได้ SUCCEEDED มาก่อน (ไม่ใช่ stale status)
+              c) ยังไม่เคย trigger UI จาก goal นี้แล้ว
+        """
+        is_running    = False
+        new_goal_id   = None
+        aborted_ids   = []
+
         for status in msg.status_list:
-            if status.status in (GoalStatus.STATUS_EXECUTING, GoalStatus.STATUS_ACCEPTED):
-                is_running = True
-                new_goal_id = status.goal_info.goal_id
+            goal_id = bytes(status.goal_info.goal_id.uuid).hex()
+            self._all_seen_goal_ids.add(goal_id)
 
-        # อัปเดต current_goal_id ก่อนเช็ค ABORTED
+            if status.status in (GoalStatus.STATUS_EXECUTING,
+                                 GoalStatus.STATUS_ACCEPTED):
+                is_running  = True
+                new_goal_id = goal_id
+
+            elif status.status == GoalStatus.STATUS_SUCCEEDED:
+                # บันทึก goal ที่ succeed แล้ว
+                self._succeeded_goal_ids.add(goal_id)
+                self.get_logger().debug(f'Goal {goal_id[:8]} SUCCEEDED — recorded.')
+
+            elif status.status == GoalStatus.STATUS_ABORTED:
+                aborted_ids.append(goal_id)
+
+        # อัปเดต current running goal
         if new_goal_id is not None:
             self.current_goal_id = new_goal_id
 
-        # รอบสอง: เช็ค ABORTED เฉพาะ Goal ที่เป็น current เท่านั้น
-        for status in msg.status_list:
-            if status.status == GoalStatus.STATUS_ABORTED:
-                # ถ้ามี Goal ใหม่วิ่งอยู่แล้ว = Goal เก่าถูก preempt → ไม่ใช่ปัญหา
-                if is_running:
-                    self.get_logger().debug('Goal preempted by new goal, ignoring ABORTED.')
-                    break
-                # ถ้าไม่มี Goal ใหม่ = ABORTED จริงๆ
-                self.fire_ui_trigger("NAV2_ABORTED")
-                break
-
         self.is_nav_active = is_running
+
+        # ─── ตรวจสอบ ABORTED ───
+        # ยิง UI เฉพาะเมื่อ:
+        #   - ไม่มี goal ใหม่วิ่งอยู่ (ถ้ามี = preempt เท่านั้น)
+        #   - goal ที่ abort ไม่ได้ succeed ไปก่อนแล้ว (ป้องกัน stale msg)
+        #   - ยังไม่ trigger UI อยู่
+        if not is_running and not self.is_ui_active:
+            for aid in aborted_ids:
+                if aid not in self._succeeded_goal_ids:
+                    self.get_logger().warn(
+                        f'Goal {aid[:8]} ABORTED (not preempt, not succeeded) → trigger UI')
+                    self.fire_ui_trigger('NAV2_ABORTED')
+                    break
+                else:
+                    self.get_logger().debug(
+                        f'Goal {aid[:8]} ABORTED but was already SUCCEEDED — ignoring.')
 
     def ui_decision_callback(self, msg: String):
         choice = msg.data
-        self.get_logger().info(f"👉 User chose: {choice}")
+        self.get_logger().info(f'👉 User chose: {choice}')
 
-        # เมื่อ User เลือกแล้ว -> ให้ข้าม Sonar ไปก่อน (เพื่อให้รถถอย/ขยับได้)
         self.is_ignoring_sonar = True
         self.sonar_ignore_pub.publish(Bool(data=True))
 
-        if choice == "wait":
-            self.pause_pub.publish(String(data="START"))
+        if choice == 'wait':
+            self.pause_pub.publish(String(data='START'))
 
-        elif choice == "go_home":
+        elif choice == 'go_home':
             self.cancel_current_nav_goal_then_return_home()
 
-        elif choice == "go_checkpoint":
-            # ✅ ใช้ฟังก์ชันใหม่ที่คุณเขียนมา
+        elif choice == 'go_checkpoint':
             self.cancel_current_nav_goal_then_go_to_checkpoint()
 
-        elif choice == "ui_cancelled":
+        elif choice == 'ui_cancelled':
             self.reset_flags()
 
     def specialist_result_callback(self, msg: String):
         result = msg.data
-        self.get_logger().info(f"✅ Specialist Finished: {result}")
+        self.get_logger().info(f'✅ Specialist Finished: {result}')
         self.reset_flags()
-        
-        # ถ้า Specialist บอกว่าให้ทำอะไรต่อ (Chain Action)
-        if result in ("go_home", "go_checkpoint"):
+
+        if result in ('go_home', 'go_checkpoint'):
             self.ui_decision_callback(String(data=result))
 
-    # -------------------------
-    # Cancel & Action Logic
-    # -------------------------
-    # 1. Return Home Logic
+    # ─────────────────────────── Cancel & Action ─────────────────────
+
     def cancel_current_nav_goal_then_return_home(self):
         self._generic_cancel_sequence(self._cancel_done_callback_home)
 
@@ -210,10 +226,9 @@ class StuckManagerNode(Node):
         self.publish_return_home_start()
 
     def publish_return_home_start(self):
-        self.get_logger().info("🏠 sending START to ReturnHome")
-        self.home_pub.publish(String(data="START"))
+        self.get_logger().info('🏠 sending START to ReturnHome')
+        self.home_pub.publish(String(data='START'))
 
-    # 2. Go Checkpoint Logic
     def cancel_current_nav_goal_then_go_to_checkpoint(self):
         self._generic_cancel_sequence(self._cancel_done_callback_checkpoint)
 
@@ -222,24 +237,19 @@ class StuckManagerNode(Node):
         self.publish_go_to_checkpoint_start()
 
     def publish_go_to_checkpoint_start(self):
-        self.get_logger().info("📍 sending START to GoCheckpoint")
-        self.checkpoint_pub.publish(String(data="START"))
+        self.get_logger().info('📍 sending START to GoCheckpoint')
+        self.checkpoint_pub.publish(String(data='START'))
 
-    # Helper สำหรับ Cancel (ลดโค้ดซ้ำ)
     def _generic_cancel_sequence(self, done_callback):
         if not self.cancel_goal_client.wait_for_service(timeout_sec=2.0):
-            # ถ้า Service ไม่มา ให้ข้ามไปสั่งเลย
-            self.get_logger().error("Cancel Service unavail. Force starting action.")
-            # Trick: เรียก callback ด้วย Fake Future (หรือข้ามไปเรียก publish เลยก็ได้)
-            # แต่ในที่นี้ขอข้ามไป publish เลยตาม logic เดิมไม่ได้ เพราะต้องแยก func
-            # งั้นข้ามส่วนนี้ไปก่อน เน้นทำงานได้
+            self.get_logger().error('Cancel Service unavail. Force starting action.')
             return
 
         req = CancelGoal.Request()
         if self.current_goal_id:
-             req.goal_info.goal_id = self.current_goal_id
-        
-        self.get_logger().info("⏳ Cancelling Nav2...")
+            req.goal_info.goal_id = self.current_goal_id
+
+        self.get_logger().info('⏳ Cancelling Nav2...')
         time.sleep(0.5)
         future = self.cancel_goal_client.call_async(req)
         future.add_done_callback(done_callback)
@@ -247,29 +257,29 @@ class StuckManagerNode(Node):
     def _log_cancel_result(self, future):
         try:
             future.result()
-            self.get_logger().info("✅ Cancel successful.")
+            self.get_logger().info('✅ Cancel successful.')
         except Exception as e:
-            self.get_logger().warn(f"Cancel failed: {e}")
+            self.get_logger().warn(f'Cancel failed: {e}')
         time.sleep(0.5)
 
-    # -------------------------
-    # Helpers
-    # -------------------------
-    def reset_flags(self):
-        self.is_ui_active = False
-        self.is_ignoring_sonar = False
-        self.current_goal_id = None
-        # หยุด ignore sonar (กลับมาโหมดปลอดภัย)
-        self.sonar_ignore_pub.publish(Bool(data=False))
-        # Reset Watchdog Timer ด้วย
-        self.last_moving_time = self.get_clock().now()
+    # ─────────────────────────── Helpers ─────────────────────────────
 
-    # Feedback logging
-    def pause_feedback_cb(self, msg: String): pass
-    def pause_result_cb(self, msg: String): pass
-    def home_feedback_cb(self, msg: String): pass
-    def home_result_cb(self, msg: String): pass
+    def reset_flags(self):
+        self.is_ui_active      = False
+        self.is_ignoring_sonar = False
+        self.current_goal_id   = None
+        self.sonar_ignore_pub.publish(Bool(data=False))
+        self.last_moving_time  = self.get_clock().now()
+        # ล้าง succeeded set เพื่อไม่ให้โตเรื่อยๆ (เก็บแค่ที่เพิ่ง reset)
+        self._succeeded_goal_ids.clear()
+        self._all_seen_goal_ids.clear()
+
+    def pause_feedback_cb(self, msg: String):    pass
+    def pause_result_cb(self, msg: String):      pass
+    def home_feedback_cb(self, msg: String):     pass
+    def home_result_cb(self, msg: String):       pass
     def checkpoint_result_cb(self, msg: String): pass
+
 
 def main(args=None):
     rclpy.init(args=args)
@@ -284,6 +294,7 @@ def main(args=None):
         node.destroy_node()
         executor.shutdown()
         rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()

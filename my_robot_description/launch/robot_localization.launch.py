@@ -28,12 +28,12 @@ def generate_launch_description():
     # --- Launch Arguments ---
     declare_world_arg = DeclareLaunchArgument(
         'world',
-        default_value=os.path.join(pkg_dir, 'worlds', 'test2.sdf'),
+        default_value=os.path.join(pkg_dir, 'worlds', 'test1.sdf'),
         description='Full path to the world file to load'
     )
     declare_map_arg = DeclareLaunchArgument(
         'map',
-        default_value=os.path.join(pkg_dir, 'maps', 'test2.yaml'),
+        default_value=os.path.join(pkg_dir, 'maps', 'test1.yaml'),
         description='Full path to map file'
     )
     declare_use_sim_time_cmd = DeclareLaunchArgument(
