@@ -57,7 +57,7 @@ def generate_launch_description():
                 FindPackageShare('ros_gz_sim'), 'launch', 'gz_sim.launch.py'
             ])
         ]),
-        launch_arguments={'gz_args': ['-r ', world]}.items()
+        launch_arguments={'gz_args': ['-r -s ', world]}.items()
     )
 
     # --- Nodes ---
@@ -218,20 +218,17 @@ def generate_launch_description():
     )
 
     # =====================================================================
-    # FIX: RSP ต้องเริ่มพร้อม Bridge และ JSP
+    # TIMING SEQUENCE (แก้ไขแล้ว):
     #
-    # ปัญหาเดิม (Deadlock):
-    #   JSP รอ robot_description  ←→  RSP รอ joint_states  ← วนไม่จบ!
-    #
-    # ลำดับที่ถูกต้อง:
     #   t=0s   → Gazebo เริ่ม
-    #   t=2s   → Bridge + RSP + JSP เริ่มพร้อมกัน
-    #              RSP publish robot_description ทันที  ← JSP หลุดจาก deadlock
-    #              Bridge forward /clock มา ROS2
-    #   t=2s   → wait_for_clock รอ /joint_states มี timestamp > sec=0
+    #   t=2s   → Bridge + RSP + JSP + frame_fixer เริ่มพร้อมกัน
+    #              *** frame_fixer ต้องเริ่มก่อน AMCL ***
+    #              เพราะ AMCL subscribe /scan_corrected ตั้งแต่ต้น
+    #              ถ้า frame_fixer ช้า → AMCL จะรับ frame ผิด → map drift
+    #   t=2s   → wait_for_joint_states รอ /joint_states มี timestamp > sec=0
     #   OK     → spawn robot
-    #   t+2s   → EKF + frame_fixer
-    #   EKF    → Nav2, RViz, helper nodes ทั้งหมด
+    #   t+2s   → EKF
+    #   t+5s   → Nav2 + RViz + helper nodes (รอให้ frame_fixer publish ก่อน)
     # =====================================================================
 
     # รอ /joint_states มี timestamp > sec=0 (clock sync แล้ว)
@@ -248,7 +245,21 @@ def generate_launch_description():
         output='screen'
     )
 
-    # เมื่อ joint_states พร้อม → spawn → EKF
+    # Bridge + RSP + JSP + frame_fixer เริ่มพร้อมกันหลัง Gazebo 2s
+    # *** frame_fixer อยู่ที่นี่เพื่อให้เริ่มก่อน Nav2/AMCL ***
+    start_after_gazebo = TimerAction(
+        period=2.0,
+        actions=[
+            LogInfo(msg='[TIMING] Gazebo ready, starting Bridge + RSP + JSP + FrameFixer...'),
+            gz_ros_bridge_node,
+            robot_state_publisher_node,
+            joint_state_publisher_node,
+            frame_fixer_node,        # ← ย้ายมาที่นี่ เริ่มก่อน AMCL
+            wait_for_joint_states,
+        ]
+    )
+
+    # เมื่อ joint_states พร้อม → spawn → EKF (ไม่มี frame_fixer แล้ว)
     start_spawn_after_joints = RegisterEventHandler(
         OnProcessExit(
             target_action=wait_for_joint_states,
@@ -258,44 +269,37 @@ def generate_launch_description():
                 TimerAction(
                     period=2.0,
                     actions=[
-                        LogInfo(msg='[TIMING] Robot spawned, starting EKF & Frame Fixer...'),
+                        LogInfo(msg='[TIMING] Robot spawned, starting EKF...'),
                         robot_localization_node,
-                        frame_fixer_node,
                     ]
                 )
             ]
         )
     )
 
-    # Bridge + RSP + JSP เริ่มพร้อมกันหลัง Gazebo 2s
-    # RSP ต้องอยู่ในกลุ่มนี้เพื่อ publish robot_description ให้ JSP
-    start_after_gazebo = TimerAction(
-        period=2.0,
-        actions=[
-            LogInfo(msg='[TIMING] Gazebo ready, starting Bridge + RSP + JSP + wait_for_clock...'),
-            gz_ros_bridge_node,
-            robot_state_publisher_node,  # ← ย้ายมาอยู่ที่นี่ (FIX)
-            joint_state_publisher_node,
-            wait_for_joint_states,
-        ]
-    )
-
-    # เมื่อ EKF เริ่ม → Nav2, RViz, helper nodes ทั้งหมด
+    # เมื่อ EKF เริ่ม → รอ 3s ให้ frame_fixer publish scan_corrected ก่อน
+    # แล้วค่อยเริ่ม Nav2 (AMCL จะได้รับ frame ที่ถูกต้องตั้งแต่แรก)
     start_nav2_rviz_handler = RegisterEventHandler(
         OnProcessStart(
             target_action=robot_localization_node,
             on_start=[
-                LogInfo(msg='[TIMING] EKF started! Starting Nav2, RViz, and ALL Helper Nodes...'),
-                start_nav2,
-                rviz_node,
-                stuck_manager_node,
-                stuck_ui_node,
-                goal_monitor_node,
-                laser_to_sonar_node,
-                pause_mode_node,
-                return_to_home_node,
-                go_to_checkpoint_node,
-                path_recorder_node,
+                LogInfo(msg='[TIMING] EKF started! Waiting 3s for frame_fixer to be ready...'),
+                TimerAction(
+                    period=3.0,    # ← รอให้ frame_fixer publish /scan_corrected ก่อน
+                    actions=[
+                        LogInfo(msg='[TIMING] Starting Nav2, RViz, and ALL Helper Nodes...'),
+                        start_nav2,
+                        rviz_node,
+                        stuck_manager_node,
+                        stuck_ui_node,
+                        goal_monitor_node,
+                        laser_to_sonar_node,
+                        pause_mode_node,
+                        return_to_home_node,
+                        go_to_checkpoint_node,
+                        path_recorder_node,
+                    ]
+                )
             ]
         )
     )
@@ -305,7 +309,7 @@ def generate_launch_description():
         declare_map_arg,
         declare_use_sim_time_cmd,
         start_gazebo_cmd,
-        start_after_gazebo,         # Bridge + RSP + JSP + wait หลัง Gazebo 2s
+        start_after_gazebo,         # Bridge + RSP + JSP + FrameFixer หลัง Gazebo 2s
         start_spawn_after_joints,   # spawn + EKF หลัง joint_states พร้อม
-        start_nav2_rviz_handler,    # Nav2 + RViz + helpers หลัง EKF
+        start_nav2_rviz_handler,    # Nav2 + RViz + helpers หลัง EKF + 3s delay
     ])

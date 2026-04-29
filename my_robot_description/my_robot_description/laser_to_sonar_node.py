@@ -16,7 +16,7 @@ class LaserToSonarNode(Node):
 
         # --- ✨ 2. เพิ่ม Parameters ---
         # ระยะ STOP (เมตร) - คุณสามารถเปลี่ยนได้จากไฟล์ Launch
-        self.declare_parameter('stop_distance', 0.75) 
+        self.declare_parameter('stop_distance', 0.50) 
         # องศาที่จะตรวจสอบ (เช่น 30 องศา คือ +/- 15)
         self.declare_parameter('angle_range_degrees', 45.0) 
 

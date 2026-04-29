@@ -60,14 +60,13 @@ class StuckManagerNode(Node):
 
         self.pause_pub      = self.create_publisher(String, '/pause_mode/command',        10)
         self.home_pub       = self.create_publisher(String, '/return_to_home/command',    10)
-        self.checkpoint_pub = self.create_publisher(String, '/go_to_checkpoint/command',  10)
+        self.retry_pub      = self.create_publisher(String, '/retry_current_goal',        10)
         self.sonar_ignore_pub = self.create_publisher(Bool, '/sonar_ignore',              10)
 
         self.create_subscription(String, '/pause_mode/feedback',     self.pause_feedback_cb,     10)
         self.create_subscription(String, '/pause_mode/result',       self.pause_result_cb,       10)
         self.create_subscription(String, '/return_to_home/feedback', self.home_feedback_cb,      10)
         self.create_subscription(String, '/return_to_home/result',   self.home_result_cb,        10)
-        self.create_subscription(String, '/go_to_checkpoint/result', self.checkpoint_result_cb,  10)
 
         # =========================================
         # 🛠 SERVICES & TIMERS
@@ -87,8 +86,6 @@ class StuckManagerNode(Node):
         self.is_nav_active     = False
 
         # ─── FIX: ติดตาม goal ที่เคยเห็น SUCCEEDED แล้ว ───────────────────
-        # เพื่อกรองออก goal เก่าที่มี status ABORTED หลังจาก preempt
-        # และป้องกันการ trigger UI ซ้ำจาก goal ที่จบไปแล้ว
         self._succeeded_goal_ids = set()  # goal_id ที่ SUCCEEDED แล้ว
         self._all_seen_goal_ids  = set()  # goal_id ทั้งหมดที่เคยเห็น
         # ──────────────────────────────────────────────────────────────────
@@ -136,16 +133,6 @@ class StuckManagerNode(Node):
             self.fire_ui_trigger('VIRTUAL_BUMPER_STOP')
 
     def nav_goal_status_callback(self, msg: GoalStatusArray):
-        """
-        ตรรกะที่แก้ไขแล้ว:
-
-        1. สแกนหา goal ที่กำลัง EXECUTING/ACCEPTED อยู่ → is_nav_active
-        2. บันทึก goal ที่ SUCCEEDED ไว้ใน _succeeded_goal_ids
-        3. ABORTED → trigger UI เฉพาะเมื่อ:
-              a) ไม่มี goal ใหม่กำลังวิ่งอยู่ (ไม่ใช่ preempt)
-              b) goal นั้นไม่ได้ SUCCEEDED มาก่อน (ไม่ใช่ stale status)
-              c) ยังไม่เคย trigger UI จาก goal นี้แล้ว
-        """
         is_running    = False
         new_goal_id   = None
         aborted_ids   = []
@@ -173,21 +160,20 @@ class StuckManagerNode(Node):
 
         self.is_nav_active = is_running
 
-        # ─── ตรวจสอบ ABORTED ───
+        # ─── ตรวจสอบ ABORTED (แก้ไข) ───
         # ยิง UI เฉพาะเมื่อ:
-        #   - ไม่มี goal ใหม่วิ่งอยู่ (ถ้ามี = preempt เท่านั้น)
-        #   - goal ที่ abort ไม่ได้ succeed ไปก่อนแล้ว (ป้องกัน stale msg)
-        #   - ยังไม่ trigger UI อยู่
+        #   - ไม่มี goal ใหม่วิ่งอยู่
+        #   - เช็คเฉพาะ goal ปัจจุบันที่มีสถานะเป็น ABORTED (ไม่เอา goal เก่า)
+        #   - goal นั้นไม่ได้ succeed ไปก่อนแล้ว
         if not is_running and not self.is_ui_active:
-            for aid in aborted_ids:
-                if aid not in self._succeeded_goal_ids:
+            if self.current_goal_id in aborted_ids:
+                if self.current_goal_id not in self._succeeded_goal_ids:
                     self.get_logger().warn(
-                        f'Goal {aid[:8]} ABORTED (not preempt, not succeeded) → trigger UI')
+                        f'Current Goal {self.current_goal_id[:8]} ABORTED → trigger UI')
                     self.fire_ui_trigger('NAV2_ABORTED')
-                    break
                 else:
                     self.get_logger().debug(
-                        f'Goal {aid[:8]} ABORTED but was already SUCCEEDED — ignoring.')
+                        f'Goal {self.current_goal_id[:8]} ABORTED but was already SUCCEEDED — ignoring.')
 
     def ui_decision_callback(self, msg: String):
         choice = msg.data
@@ -203,7 +189,7 @@ class StuckManagerNode(Node):
             self.cancel_current_nav_goal_then_return_home()
 
         elif choice == 'go_checkpoint':
-            self.cancel_current_nav_goal_then_go_to_checkpoint()
+            self.cancel_current_nav_goal_then_retry()
 
         elif choice == 'ui_cancelled':
             self.reset_flags()
@@ -229,16 +215,13 @@ class StuckManagerNode(Node):
         self.get_logger().info('🏠 sending START to ReturnHome')
         self.home_pub.publish(String(data='START'))
 
-    def cancel_current_nav_goal_then_go_to_checkpoint(self):
-        self._generic_cancel_sequence(self._cancel_done_callback_checkpoint)
+    def cancel_current_nav_goal_then_retry(self):
+        self._generic_cancel_sequence(self._cancel_done_callback_retry)
 
-    def _cancel_done_callback_checkpoint(self, future):
+    def _cancel_done_callback_retry(self, future):
         self._log_cancel_result(future)
-        self.publish_go_to_checkpoint_start()
-
-    def publish_go_to_checkpoint_start(self):
-        self.get_logger().info('📍 sending START to GoCheckpoint')
-        self.checkpoint_pub.publish(String(data='START'))
+        self.get_logger().info('🔄 Requesting retry of current goal...')
+        self.retry_pub.publish(String(data='RETRY'))
 
     def _generic_cancel_sequence(self, done_callback):
         if not self.cancel_goal_client.wait_for_service(timeout_sec=2.0):
@@ -278,7 +261,6 @@ class StuckManagerNode(Node):
     def pause_result_cb(self, msg: String):      pass
     def home_feedback_cb(self, msg: String):     pass
     def home_result_cb(self, msg: String):       pass
-    def checkpoint_result_cb(self, msg: String): pass
 
 
 def main(args=None):

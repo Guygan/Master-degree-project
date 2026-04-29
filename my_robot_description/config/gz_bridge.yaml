@@ -1,22 +1,18 @@
-# ===================================================================
-# gz_bridge.yaml (ฉบับสมบูรณ์ แก้ไขตาม 'gz topic -l' จริง)
-# ===================================================================
-
-# Clock (ถูกต้องแล้ว)
 - ros_topic_name: "/clock"
   gz_topic_name: "/clock"
   ros_type_name: "rosgraph_msgs/msg/Clock"
   gz_type_name: "gz.msgs.Clock"
   direction: GZ_TO_ROS
 
-# Lidar Sensor Data (ถูกต้องแล้ว)
 - ros_topic_name: "/scan"
-  gz_topic_name: "/scan" 
+  gz_topic_name: "/scan"
   ros_type_name: "sensor_msgs/msg/LaserScan"
   gz_type_name: "gz.msgs.LaserScan"
   direction: GZ_TO_ROS
+  publisher_queue_size: 1  
+  subscriber_queue_size: 1  
+  lazy: false
 
-# Odometry Data (ถูกต้องแล้ว)
 - ros_topic_name: "/odom"
   gz_topic_name: "/model/my_robot/odometry"
   ros_type_name: "nav_msgs/msg/Odometry"

@@ -132,7 +132,7 @@ class StuckUiNode(Node):
                 '--title=ROBOT RECOVERY',
                 '--text=Choose recovery action:', '--radiolist',
                 '--column=Choice', '--column=Action',
-                'FALSE', 'Return to Checkpoint', # <-- แก้ไข
+                'FALSE', 'Find New Path',
                 'TRUE', 'Wait', 
                 'FALSE', 'Return to HOME'
             ]
@@ -162,7 +162,7 @@ class StuckUiNode(Node):
                     '--title=ROBOT PAUSED (Wait Mode)',
                     '--text=Obstacle present. Robot is paused.\nChoose action:', '--radiolist',
                     '--column=Choice', '--column=Action',
-                    'TRUE', 'Return to Checkpoint', # <-- แก้ไข (ลบเว้นวรรค)
+                    'TRUE', 'Find New Path',
                     'FALSE', 'Return to Home (0,0)'
                 ]
                 
@@ -183,18 +183,16 @@ class StuckUiNode(Node):
                     stdout, _ = self.choice_process.communicate()
                     choice = stdout.strip()
                     if choice == 'Return to Home (0,0)': final_choice_mapped = "go_home"
-                    # ‼️ [แก้ไข] 5. แก้ไขคำให้ตรงกัน (Bug ที่คุยกัน)
-                    elif choice == 'Return to Checkpoint': final_choice_mapped = "go_checkpoint"
+                    elif choice == 'Find New Path': final_choice_mapped = "go_checkpoint"
                     else: final_choice_mapped = "ui_cancelled" 
                 else:
                     final_choice_mapped = "ui_cancelled" 
                 
                 self.choice_process = None
             
-            # ‼️ [แก้ไข] 6. แก้ไขคำให้ตรงกัน
             elif choice_stage_2 == 'Return to HOME':
                 final_choice_mapped = "go_home"
-            elif choice_stage_2 == 'Return to Checkpoint': # <-- แก้ไข
+            elif choice_stage_2 == 'Find New Path':
                 final_choice_mapped = "go_checkpoint"
             else:
                 self.get_logger().warn('No choice made in Stage 2. Defaulting to cancel.')

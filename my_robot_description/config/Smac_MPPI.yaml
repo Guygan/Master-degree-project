@@ -6,26 +6,59 @@ amcl:
     odom_frame_id: "odom"
     scan_topic: "/scan_corrected"
     set_initial_pose: true
-    save_pose_period: -1.0
     initial_pose:
       x: 0.0
       y: 0.0
       z: 0.0
       yaw: 0.0
-    min_particles: 500
-    max_particles: 3000
+
+    # [แก้ไข] ลด particle เพราะ Gazebo odometry แม่น ไม่ต้องการ particle เยอะ
+    # particle เยอะเกิน → กระจายมาก + หนัก CPU
+    min_particles: 200
+    max_particles: 800
+
+    laser_model_type: "likelihood_field"
+    laser_max_range: 3.0
+    laser_min_range: 0.3
+
+    # [แก้ไข] เพิ่ม max_beams → อ่าน laser ละเอียดขึ้น → converge เร็วขึ้น
+    max_beams: 120
+
+    # [แก้ไข] z_hit สูงขึ้น + z_rand ต่ำลง
+    # Gazebo laser แม่นมาก ควรเชื่อ hit มากกว่า random noise
+    sigma_hit: 0.1           # ลดจาก 0.2 → beam matching เข้มงวดขึ้น
+    z_hit: 0.9               # เพิ่มจาก 0.5 → เชื่อ laser จริง
+    z_rand: 0.1              # ลดจาก 0.5 → ไม่เชื่อ noise มาก
+
+    # [แก้ไข] ลด likelihood_max_dist → matching เข้มงวดขึ้น
+    laser_likelihood_max_dist: 0.1   # ลดจาก 0.2
+
+    # [แก้ไข] ลด recovery ลง → ไม่ inject random particle บ่อย
+    # recovery คือตัวที่ทำให้ particle กระจายออกเมื่อ localization แย่
+    recovery_alpha_slow: 0.0    # ปิด slow recovery ใน Gazebo
+    recovery_alpha_fast: 0.0    # ปิด fast recovery ใน Gazebo
+
+    # [แก้ไข] odom noise ต้องต่ำมากสำหรับ Gazebo sim
+    # ค่าสูง = AMCL คิดว่า odometry ผิดเยอะ → กระจาย particle
     odom_model_type: "diff"
-    odom_alpha1: 0.2
-    odom_alpha2: 0.2
-    odom_alpha3: 0.2
-    odom_alpha4: 0.2
-    update_min_d: 0.1
-    update_min_a: 0.1
+    odom_alpha1: 0.02   # ลดจาก 0.1 (rotation noise จาก rotation)
+    odom_alpha2: 0.02   # ลดจาก 0.1 (rotation noise จาก translation)
+    odom_alpha3: 0.01   # ลดจาก 0.05 (translation noise จาก translation)
+    odom_alpha4: 0.01   # ลดจาก 0.05 (translation noise จาก rotation)
+
+    # [แก้ไข] update บ่อยขึ้น → particle converge เร็วขึ้น
+    update_min_d: 0.05   # ลดจาก 0.2 → update ทุก 5cm (แทน 20cm)
+    update_min_a: 0.05   # ลดจาก 0.2 → update ทุก ~3 องศา (แทน ~11)
+
+    # [เพิ่ม] resample บ่อยขึ้น → particle ไม่กระจาย
+    resample_interval: 1    # resample ทุก update (default=2)
+
+    # [เพิ่ม] transform tolerance
+    transform_tolerance: 0.3
 
 map_server:
   ros__parameters:
     use_sim_time: true
-    # yaml_filename จะถูกส่งมาจาก Launch File
 
 planner_server:
   ros__parameters:
@@ -43,7 +76,6 @@ controller_server:
     controller_frequency: 20.0
     odom_topic: "/odom"
 
-    # Pipeline: MPPI -> cmd_vel_raw -> Smoother -> cmd_vel_smoothed -> Collision Monitor -> cmd_vel
     cmd_vel_out_topic: "cmd_vel_raw"
 
     progress_checker_plugins: ["progress_checker"]
@@ -65,7 +97,7 @@ controller_server:
       plugin: "nav2_mppi_controller::MPPIController"
       time_steps: 40
       model_dt: 0.05
-      batch_size: 1400
+      batch_size: 500
       vx_std: 1.5
       vy_std: 0.0
       wz_std: 0.8
@@ -75,7 +107,7 @@ controller_server:
       wz_max: 0.8
       iteration_count: 1
       prune_distance: 1.7
-      transform_tolerance: 1.0
+      transform_tolerance: 0.3
       temperature: 0.3
       gamma: 0.015
       motion_model: "DiffDrive"
@@ -147,7 +179,6 @@ bt_navigator:
   ros__parameters:
     use_sim_time: true
     default_bt_xml_filename: "/opt/ros/jazzy/share/nav2_bt_navigator/behavior_trees/navigate_w_replanning_and_recovery.xml"
-
     error_code_names:
       - compute_path_error_code
       - follow_path_error_code
@@ -157,25 +188,20 @@ velocity_smoother:
     use_sim_time: true
     smoothing_frequency: 20.0
     feedback: "OPEN_LOOP"
-    max_velocity: [0.75, 0.0, 1.0]
-    min_velocity: [-0.75, 0.0, -1.0]
+    max_velocity: [1.0, 0.0, 1.0]
+    min_velocity: [-0.5, 0.0, -1.0]
     accel_lim_v: [2.5, 0.0, 3.2]
     input_topic: "cmd_vel_raw"
     output_topic: "cmd_vel_smoothed"
 
-# [แก้ไข] เปลี่ยนจาก recoveries_server เป็น behavior_server สำหรับ Jazzy
 behavior_server:
   ros__parameters:
     use_sim_time: true
     costmap_topic: local_costmap/costmap_raw
     footprint_topic: local_costmap/footprint
     cycle_frequency: 10.0
-
-    # เปลี่ยนชื่อ parameter เป็น behavior_plugins
     behavior_plugins:
       ["spin", "backup", "wait", "drive_on_heading", "assisted_teleop"]
-
-    # เปลี่ยน Type เป็น nav2_behaviors
     spin:
       plugin: "nav2_behaviors::Spin"
     backup:
@@ -197,13 +223,13 @@ docking_server:
 global_costmap:
   global_costmap:
     ros__parameters:
-      update_frequency: 1.0
-      publish_frequency: 1.0
+      update_frequency: 0.5
+      publish_frequency: 0.5
       global_frame: map
       robot_base_frame: base_footprint
       use_sim_time: true
       robot_radius: 0.25
-      resolution: 0.05
+      resolution: 0.035714
       track_unknown_space: true
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
       obstacle_layer:
@@ -221,6 +247,7 @@ global_costmap:
           obstacle_max_range: 2.5
           obstacle_min_range: 0.0
           min_range: 0.3
+          observation_persistence: 0.0
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
@@ -233,15 +260,15 @@ global_costmap:
 local_costmap:
   local_costmap:
     ros__parameters:
-      update_frequency: 5.0
-      publish_frequency: 2.0
+      update_frequency: 2.0
+      publish_frequency: 1.0
       global_frame: odom
       robot_base_frame: base_footprint
       use_sim_time: true
       rolling_window: true
       width: 5
       height: 5
-      resolution: 0.05
+      resolution: 0.035714
       footprint: "[[0.25, 0.25], [0.25, -0.25], [-0.25, -0.25], [-0.25, 0.25]]"
       plugins: ["obstacle_layer", "inflation_layer"]
       obstacle_layer:
@@ -272,10 +299,9 @@ collision_monitor:
     odom_frame_id: "odom"
     cmd_vel_in_topic: "cmd_vel_smoothed"
     cmd_vel_out_topic: "cmd_vel"
-    transform_tolerance: 1.0
+    transform_tolerance: 0.3
     source_timeout: 5.0
     polygons: ["PolygonStop", "PolygonSlow"]
-
     PolygonStop:
       type: "polygon"
       points: "[[0.5, 0.3], [0.5, -0.3], [0.0, -0.3], [0.0, 0.3]]"
@@ -293,7 +319,6 @@ collision_monitor:
       visualize: true
       polygon_pub_topic: "polygon_slowdown"
       enabled: false
-
     observation_sources: ["scan"]
     scan:
       type: "scan"
