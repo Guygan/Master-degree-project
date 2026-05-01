@@ -12,48 +12,30 @@ amcl:
       z: 0.0
       yaw: 0.0
 
-    # [แก้ไข] ลด particle เพราะ Gazebo odometry แม่น ไม่ต้องการ particle เยอะ
-    # particle เยอะเกิน → กระจายมาก + หนัก CPU
-    min_particles: 200
-    max_particles: 800
+    min_particles: 500
+    max_particles: 3000
 
     laser_model_type: "likelihood_field"
     laser_max_range: 3.0
     laser_min_range: 0.3
-
-    # [แก้ไข] เพิ่ม max_beams → อ่าน laser ละเอียดขึ้น → converge เร็วขึ้น
     max_beams: 120
 
-    # [แก้ไข] z_hit สูงขึ้น + z_rand ต่ำลง
-    # Gazebo laser แม่นมาก ควรเชื่อ hit มากกว่า random noise
-    sigma_hit: 0.1           # ลดจาก 0.2 → beam matching เข้มงวดขึ้น
-    z_hit: 0.9               # เพิ่มจาก 0.5 → เชื่อ laser จริง
-    z_rand: 0.1              # ลดจาก 0.5 → ไม่เชื่อ noise มาก
+    sigma_hit: 0.1
+    z_hit: 0.9
+    z_rand: 0.1
 
-    # [แก้ไข] ลด likelihood_max_dist → matching เข้มงวดขึ้น
-    laser_likelihood_max_dist: 0.1   # ลดจาก 0.2
+    laser_likelihood_max_dist: 0.5   # ขยายระยะยอมรับความคลาดเคลื่อน → หุ่นไม่ตื่นตระหนกง่าย
 
-    # [แก้ไข] ลด recovery ลง → ไม่ inject random particle บ่อย
-    # recovery คือตัวที่ทำให้ particle กระจายออกเมื่อ localization แย่
-    recovery_alpha_slow: 0.0    # ปิด slow recovery ใน Gazebo
-    recovery_alpha_fast: 0.0    # ปิด fast recovery ใน Gazebo
+    robot_model_type: "nav2_amcl::DifferentialMotionModel"
+    alpha1: 0.05   # Noise จากการหมุน เมื่อสั่งหมุน (ต่ำ = เชื่อ odometry มาก)
+    alpha2: 0.05   # Noise จากการหมุน เมื่อสั่งเดินตรง
+    alpha3: 0.05   # Noise จากการเดินตรง เมื่อสั่งเดินตรง
+    alpha4: 0.05   # Noise จากการเดินตรง เมื่อสั่งหมุน
 
-    # [แก้ไข] odom noise ต้องต่ำมากสำหรับ Gazebo sim
-    # ค่าสูง = AMCL คิดว่า odometry ผิดเยอะ → กระจาย particle
-    odom_model_type: "diff"
-    odom_alpha1: 0.02   # ลดจาก 0.1 (rotation noise จาก rotation)
-    odom_alpha2: 0.02   # ลดจาก 0.1 (rotation noise จาก translation)
-    odom_alpha3: 0.01   # ลดจาก 0.05 (translation noise จาก translation)
-    odom_alpha4: 0.01   # ลดจาก 0.05 (translation noise จาก rotation)
+    update_min_d: 0.2    # อัปเดต AMCL ทุก 20 cm
+    update_min_a: 0.2    # อัปเดต AMCL ทุก ~11 องศา
 
-    # [แก้ไข] update บ่อยขึ้น → particle converge เร็วขึ้น
-    update_min_d: 0.05   # ลดจาก 0.2 → update ทุก 5cm (แทน 20cm)
-    update_min_a: 0.05   # ลดจาก 0.2 → update ทุก ~3 องศา (แทน ~11)
-
-    # [เพิ่ม] resample บ่อยขึ้น → particle ไม่กระจาย
-    resample_interval: 1    # resample ทุก update (default=2)
-
-    # [เพิ่ม] transform tolerance
+    resample_interval: 1     # resample ทุก update → particle ไม่กระจาย
     transform_tolerance: 0.3
 
 map_server:
@@ -75,8 +57,7 @@ controller_server:
     use_sim_time: true
     controller_frequency: 20.0
     odom_topic: "/odom"
-
-    cmd_vel_out_topic: "cmd_vel_raw"
+    cmd_vel_out_topic: "cmd_vel_nav"  # [แก้] raw→nav: ให้ตรงกับที่ MPPI publish จริงใน Jazzy
 
     progress_checker_plugins: ["progress_checker"]
     goal_checker_plugins: ["goal_checker"]
@@ -95,25 +76,36 @@ controller_server:
 
     FollowPath:
       plugin: "nav2_mppi_controller::MPPIController"
-      time_steps: 40
-      model_dt: 0.05
-      batch_size: 500
-      vx_std: 1.5
-      vy_std: 0.0
-      wz_std: 0.8
-      vx_max: 1.0
-      vx_min: 0.0
+
+      # --- Horizon & Sampling ---
+      time_steps: 56          # [แก้] 40→56: มองไกลขึ้นเป็น 2.8s ที่ 1m/s (เดิม 2s ไม่พอวางแผนข้าม obstacle)
+      model_dt: 0.05          # ขนาด timestep 50ms (คงเดิม เหมาะกับ 20Hz)
+      batch_size: 2000        # [แก้] 500→2000: sample trajectory มากขึ้น → เจอทางที่ดีกว่าในแปลงที่มี obstacle กระจาย
+      iteration_count: 2      # [แก้] 1→2: refine trajectory 2 รอบก่อน publish → path เรียบขึ้นมาก
+
+      # --- Noise / Exploration ---
+      vx_std: 0.5             # [แก้] 0.1→0.5: KEY FIX — std=0.1 ทำให้ sample 99% อยู่แค่ 0-0.3 m/s ต้องเพิ่มให้กระจายถึง 1.0 m/s
+      vy_std: 0.0             # DiffDrive ไม่มี lateral velocity
+      wz_std: 0.4             # [แก้] 0.8→0.4: ลดความแปรปรวนการหมุน → หุ่นไม่ส้ายหัว/wiggle
+
+      # --- Velocity Limits ---
+      vx_max: 1.0             # ความเร็วสูงสุดตรง 1 m/s (ตามที่ตั้งไว้)
+      vx_min: 0.1             # [แก้] 0.0→0.1: บังคับเดินหน้าเสมอ ไม่ให้ MPPI sample หยุดนิ่ง
       vy_max: 0.0
-      wz_max: 0.8
-      iteration_count: 1
-      prune_distance: 1.7
+      wz_max: 0.8             # ความเร็วเลี้ยวสูงสุด (คงเดิม)
+
+      # --- Core MPPI Params ---
+      temperature: 0.15       # [แก้] 0.3→0.15: ลดลงครึ่งหนึ่ง → sample ไม่กระจายมากเกิน → path นิ่งขึ้น
+                              #   (0.3 สูงเกิน ทำให้ wiggle ที่เห็นในรัน 1)
+      gamma: 0.015            # regularization weight (คงเดิม)
+
+      prune_distance: 1.7     # ตัด path ที่ผ่านมาแล้วออก ประหยัด compute
       transform_tolerance: 0.3
-      temperature: 0.3
-      gamma: 0.015
       motion_model: "DiffDrive"
       visualize: true
       retry_attempt_limit: 1
       reset_period: 1.0
+
       critics:
         - "ConstraintCritic"
         - "CostCritic"
@@ -123,20 +115,25 @@ controller_server:
         - "PathFollowCritic"
         - "PathAngleCritic"
         - "PreferForwardCritic"
+
       ConstraintCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 4.0
+        cost_weight: 4.0      # บังคับอยู่ใน velocity limits (คงเดิม)
+
       GoalCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 5.0
-        threshold_to_consider: 1.4
+        cost_weight: 3.0        # [แก้] 5→3: ลดการชะลอตอนเข้าใกล้ waypoint
+        threshold_to_consider: 0.8  # [แก้] 1.4→0.8  # [แก้] 1.4→0.8: เริ่ม "จ้องเป้าหมาย" ใกล้ขึ้น
+                                    #   (1.4 ทำให้ดิ่งตรงเข้าเป้าแรงเกิน → loop ที่เห็นในรัน 2)
+
       GoalAngleCritic:
         enabled: true
         cost_power: 1
         cost_weight: 3.0
         threshold_to_consider: 0.5
+
       CostCritic:
         enabled: true
         cost_power: 1
@@ -146,33 +143,38 @@ controller_server:
         consider_footprint: true
         period: 0.25
         near_goal_distance: 1.0
+
       PathAlignCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 14.0
+        cost_weight: 5.0        # [แก้] 14→10→7: ลดลงอีก ไม่ให้ลงโทษ trajectory เร็วๆ ที่เบี่ยงจาก path นิดหน่อย
+                                #   (14 แข็งเกิน → ขัดกับ CostCritic ตรงช่องแคบ)
         max_path_occupancy_ratio: 0.05
         trajectory_point_step: 3
         threshold_to_consider: 0.5
         offset_from_furthest: 20
         use_path_orientations: false
+
       PathFollowCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 5.0
+        cost_weight: 5.0        # ดึงหุ่นให้ follow path (คงเดิม)
         offset_from_furthest: 5
         threshold_to_consider: 1.4
+
       PathAngleCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 2.0
+        cost_weight: 3.5        # [แก้] 2.0→3.5: บังคับหันตามทิศ path มากขึ้น → ลด oscillation ด้านหัว
         offset_from_furthest: 4
         threshold_to_consider: 0.5
         max_angle_to_furthest: 0.785
         mode: 0
+
       PreferForwardCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 5.0
+        cost_weight: 5.0        # ให้ความสำคัญกับการเดินหน้า (คงเดิม)
         threshold_to_consider: 0.5
 
 bt_navigator:
@@ -191,7 +193,7 @@ velocity_smoother:
     max_velocity: [1.0, 0.0, 1.0]
     min_velocity: [-0.5, 0.0, -1.0]
     accel_lim_v: [2.5, 0.0, 3.2]
-    input_topic: "cmd_vel_raw"
+    input_topic: "cmd_vel_nav"   # [แก้] ให้รับจาก topic จริงที่ MPPI ส่ง
     output_topic: "cmd_vel_smoothed"
 
 behavior_server:
@@ -254,20 +256,23 @@ global_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
-        inflation_radius: 0.55
+        inflation_radius: 0.7   # [แก้] 0.5→0.7: หุ่น radius 0.25m ต้องการ margin มากกว่า
+                                #   Smac2D จะวาง global path ห่าง obstacle มากขึ้น
+                                #   ลดภาระที่ MPPI ต้องหลบเองในระยะสั้น
       always_send_full_costmap: True
 
 local_costmap:
   local_costmap:
     ros__parameters:
-      update_frequency: 2.0
-      publish_frequency: 1.0
+      update_frequency: 5.0   # [แก้] 2.0→5.0: เพิ่มความถี่ให้ทัน controller 20Hz
+                              #   (2Hz ช้าเกิน → MPPI ใช้ costmap เก่าตัดสินใจ)
+      publish_frequency: 2.0
       global_frame: odom
       robot_base_frame: base_footprint
       use_sim_time: true
       rolling_window: true
-      width: 5
-      height: 5
+      width: 7                # [แก้] 5→7: ขยาย local window ให้กว้างขึ้น
+      height: 7               #   ที่ 1m/s หน้าต่าง 5m ให้เวลาแค่ 5s ควรมองไกลกว่า
       resolution: 0.035714
       footprint: "[[0.25, 0.25], [0.25, -0.25], [-0.25, -0.25], [-0.25, 0.25]]"
       plugins: ["obstacle_layer", "inflation_layer"]
@@ -289,7 +294,7 @@ local_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 5.0
-        inflation_radius: 0.55
+        inflation_radius: 0.5   # local costmap คงเดิม — MPPI ใช้ค่านี้ตัดสินใจแบบ real-time
       always_send_full_costmap: True
 
 collision_monitor:

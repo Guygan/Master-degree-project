@@ -108,7 +108,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='cylinder_4'>
@@ -157,7 +157,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='cylinder_6'>
@@ -206,7 +206,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='cylinder_7'>
@@ -255,7 +255,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='cylinder_9'>
@@ -304,7 +304,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='cylinder_11'>
@@ -353,7 +353,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='cylinder_13'>
@@ -402,7 +402,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='cylinder_14'>
@@ -451,7 +451,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='cylinder_18'>
@@ -500,7 +500,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='box'>
@@ -547,7 +547,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='box_0'>
@@ -594,7 +594,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='box_1'>
@@ -641,7 +641,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='box_2'>
@@ -688,7 +688,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='box_3'>
@@ -735,7 +735,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='box_4'>
@@ -782,7 +782,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='box_5'>
@@ -829,7 +829,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='box_6'>
@@ -876,7 +876,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='box_7'>
@@ -923,7 +923,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='box_8'>
@@ -970,7 +970,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='box_9'>
@@ -1017,7 +1017,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='box_10'>
@@ -1064,7 +1064,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='sphere'>
@@ -1111,7 +1111,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='box_11'>
@@ -1158,7 +1158,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='box_12'>
@@ -1205,7 +1205,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='cylinder_0'>
@@ -1254,7 +1254,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='box_13'>
@@ -1301,7 +1301,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='cylinder_1'>
@@ -1350,7 +1350,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='cylinder_2'>
@@ -1399,7 +1399,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <model name='cylinder_3'>
@@ -1448,7 +1448,7 @@
         <pose>0 0 0 0 0 0</pose>
         <enable_wind>false</enable_wind>
       </link>
-      <static>false</static>
+      <static>true</static>
       <self_collide>false</self_collide>
     </model>
     <light name='sun' type='directional'>

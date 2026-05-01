@@ -17,16 +17,12 @@ import csv
 SCALE_FACTOR = 1.0
 
 TEST_WAYPOINTS = [
-    [-0.005, 2.058, 0.701, 0.713],   # จุดที่ 1
-    [0.413, 3.902, 0.714, 0.700],    # จุดที่ 2
-    [-3.917, 6.544, -1.000, 0.031],  # จุดที่ 3
-    [-4.062, 9.120, 0.407, 0.913],   # จุดที่ 4
-    [-5.273, -3.889, -0.703, 0.711], # จุดที่ 5
-    [-2.487, -3.934, 0.063, 0.998],  # จุดที่ 6
-    [3.239, -3.900, 0.007, 1.000],   # จุดที่ 7
-    [8.700, -1.940, 0.722, 0.691]    # จุดที่ 8
+    [-2.352, -0.088, -0.999, 0.026], # จุดที่ 1 (จาก YAML ตัวที่ 1)
+    [-5.238, 6.895, 0.761, 0.649],   # จุดที่ 2 (จาก YAML ตัวที่ 2)
+    [3.263, 7.145, -0.694, 0.720],   # จุดที่ 3 (จาก YAML ตัวที่ 3)
+    [5.446, -1.142, -0.811, 0.584],  # จุดที่ 4 (จาก YAML ตัวที่ 4)
+    [8.405, -4.751, 0.062, 0.998]    # จุดที่ 5 (จาก YAML ตัวที่ 5)
 ]
-
 class ExperimentRunner(Node):
     def __init__(self):
         super().__init__('experiment_runner')
@@ -99,9 +95,14 @@ class ExperimentRunner(Node):
         self.last_pose = (x, y)
 
     def send_next_goal(self):
+        # แก้ไขจุดนี้: เพิ่ม Delay ก่อนหยุดการบันทึกภาพ
         if self.current_wp_index >= len(TEST_WAYPOINTS):
             self.get_logger().info('All waypoints completed!')
             self.get_logger().info(f'Results: {self.filename}')
+            
+            # รอให้หุ่นยนต์หยุดนิ่งและเก็บค่า Odom สุดท้าย (ป้องกันจุดที่ 8 ไม่ต่อกับเส้น)
+            time.sleep(1.5) 
+            
             self._call_stop_recording()
             return
 

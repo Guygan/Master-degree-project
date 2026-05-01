@@ -121,7 +121,6 @@ class PathRecorderNode(Node):
         self.waypoint_counter  = 0
         self.recording         = True
 
-        # เก็บจุดเริ่มต้นไว้แยกต่างหาก ไม่นับรวมในตัวเลข Waypoint
         sx, sy = self.current_pose
         self.start_pose = (sx, sy)
 
@@ -171,14 +170,12 @@ class PathRecorderNode(Node):
         return Image.fromarray(rgb, 'RGB')
 
     def _draw_waypoint_marker(self, draw, px, py, text_label, is_start=False, r=14):
-        # ถ้าเป็นคำว่า Start ให้ขยายวงกลมให้กว้างขึ้น เพื่อให้ตัวอักษรพอดี
         if is_start:
             r = 20 
 
         draw.ellipse([px-r-1, py-r-1, px+r+1, py+r+1],
                      fill=(0, 0, 0, 120))
         
-        # ถ้าเป็น Start ให้ใช้สีเขียว, ถ้าเป็นเป้าหมาย 1-8 ให้ใช้สีน้ำเงิน
         fill_color = (0, 160, 60, 230) if is_start else (30, 100, 220, 230)
         draw.ellipse([px-r, py-r, px+r, py+r],
                      fill=fill_color,
@@ -207,18 +204,15 @@ class PathRecorderNode(Node):
             if len(pixels) >= 2:
                 draw.line(pixels, fill=(255, 80, 80, 210), width=3)
 
-            # วาดจุด Start ให้โชว์คำว่า 'Start'
             if self.start_pose:
                 px, py = self._world_to_pixel(*self.start_pose)
                 self._draw_waypoint_marker(draw, px, py, 'Start', is_start=True)
 
-            # วาดเป้าหมายเป็นเลข 1-8
             for wx, wy, num in self.waypoints:
                 px, py = self._world_to_pixel(wx, wy)
                 self._draw_waypoint_marker(draw, px, py, str(num), is_start=False)
-
         else:
-            self.get_logger().warn('No /map received — saving path on blank canvas.')
+            # กรณีไม่มีข้อมูล Map จะสร้างภาพบนพื้นสีขาวแทน
             xs = [p[0] for p in self.path_poses]
             ys = [p[1] for p in self.path_poses]
             if self.start_pose:
