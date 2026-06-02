@@ -1,4 +1,3 @@
-
 import rclpy
 from rclpy.node import Node
 from rclpy.action import ActionClient
@@ -27,6 +26,7 @@ class GoToCheckpointNode(Node):
         self.result_pub = self.create_publisher(String, SPECIALIST_RESULT_TOPIC, 10)
         self.initial_pose_pub = self.create_publisher(PoseWithCovarianceStamped, "/initialpose", 10)
         self.ui_request_pub = self.create_publisher(String, "/request_ui_popup", 10)
+        self.sonar_ignore_pub = self.create_publisher(Bool, "/sonar_ignore", 10)
 
         # === Subscribers ===
         self.choice_sub = self.create_subscription(
@@ -54,7 +54,8 @@ class GoToCheckpointNode(Node):
 
         self.is_running_recovery = False
         self.obstacle_detected = False
-        self.nav_running = False  # << เพิ่มฟีเจอร์ตรวจ Nav2 obstacle
+        self.nav_running = False
+        self.ignore_sonar = False  # True ระหว่างถอยหลัง เพื่อไม่ให้ sonar interrupt
 
         self.get_logger().info("GoToCheckpointNode ready.")
 
@@ -90,6 +91,9 @@ class GoToCheckpointNode(Node):
         self.current_robot_pose = msg.pose.pose
 
     def sonar_callback(self, msg):
+        if self.ignore_sonar:
+            # ระหว่างถอยหลัง ไม่สนใจ sonar เพื่อให้หุ่นขยับออกมาจาก obstacle ได้
+            return
         if msg.data:
             self.obstacle_detected = True
             if self.nav_running:  # ระหว่าง Nav2
@@ -122,10 +126,21 @@ class GoToCheckpointNode(Node):
                 nearest = pose
 
         self.current_checkpoint_goal = nearest
-        self.get_logger().info(f"Nearest checkpoint: {nearest.pose.position.x:.2f}")
+        self.get_logger().info(f"Nearest checkpoint: {nearest.pose.position.x:.2f}, dist={best_dist:.2f}m")
 
-        # === Phase 1: Backup ===
-        if not self.move_straight_custom(-0.1, 5.0):
+        # === Phase 1: Backup (ignore sonar ระหว่างนี้ เพราะ obstacle อาจยังอยู่ด้านหน้า) ===
+        self.get_logger().info("Phase 1: Backing up (sonar ignored)...")
+        self.ignore_sonar = True
+        self.sonar_ignore_pub.publish(Bool(data=True))
+        backup_ok = self.move_straight_custom(-0.15, 3.0)
+        # หยุดก่อนเปิด sonar กลับ เพื่อให้ laser_to_sonar อัปเดต state ใหม่
+        time.sleep(0.3)
+        self.ignore_sonar = False
+        self.sonar_ignore_pub.publish(Bool(data=False))
+        self.obstacle_detected = False  # reset state หลังถอย
+        self.get_logger().info("Phase 1 done. Sonar re-enabled.")
+
+        if not backup_ok:
             return
 
         # === Phase 2: Rotate ===
@@ -154,8 +169,8 @@ class GoToCheckpointNode(Node):
 
         start = time.time()
         while time.time() - start < duration and self.is_running_recovery:
-
-            if self.obstacle_detected:
+            # ถ้า ignore_sonar=True (ระหว่างถอย) ให้วิ่งต่อโดยไม่ตรวจ obstacle
+            if not self.ignore_sonar and self.obstacle_detected:
                 return self.handle_maneuver_obstacle()
 
             self.cmd_pub.publish(twist)
@@ -245,6 +260,10 @@ class GoToCheckpointNode(Node):
         self.is_running_recovery = False
         self.nav_running = False
         self.obstacle_detected = False
+        # ถ้า abort กลางคันขณะ ignore อยู่ ให้ปลด ignore ด้วย
+        if self.ignore_sonar:
+            self.ignore_sonar = False
+            self.sonar_ignore_pub.publish(Bool(data=False))
 
 
 def main(args=None):
